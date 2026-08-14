@@ -18,7 +18,7 @@ docker compose up --watch --build
 make build -j # Builds all parts of the app
 
 # Or if you want to build just the backend or frontend
-make backend-build -j
+make build-backend -j
 make build-frontend -j
 
 make test -j # Runs the tests and linters on the code
