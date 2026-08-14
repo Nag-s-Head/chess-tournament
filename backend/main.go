@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 const Addr = "0.0.0.0:8080"
@@ -35,8 +37,10 @@ func main() {
 	mux.HandleFunc("GET /health-check", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})
+	mux.Handle("/metrics", promhttp.Handler())
 
-	err := http.ListenAndServe(Addr, mux)
+	handler := prometheusMiddleware(mux)
+	err := http.ListenAndServe(Addr, handler)
 	if err != nil {
 		slog.Error("Could not start", "err", err, "addr", Addr)
 	}
