@@ -2,13 +2,13 @@ include test.env
 DATABASE_URL := $(shell echo $(DATABASE_URL) | sed 's/"//g')
 export DATABASE_URL
 
-build: build-frontend build-backend
+build: frontend-build backend-build
 	echo "Built"
 
 frontend-deps:
 	cd frontend && pnpm i
 
-build-frontend: frontend-deps
+frontend-build: frontend-deps
 	cd frontend && pnpm build
 
 backend-deps:
@@ -23,7 +23,7 @@ frontend-generate: frontend-deps backend-deps
 generate: frontend-generate backend-generate
 	echo "Codegen Done"
 
-build-backend: backend-deps backend-generate
+backend-build: backend-deps backend-generate
 	cd backend && go build 
 
 docker-images:
