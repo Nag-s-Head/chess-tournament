@@ -1,0 +1,21 @@
+name: Test 
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: ["*"]
+  push:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/shared/setup
+
+      - name: Test 
+        run: make test -j
