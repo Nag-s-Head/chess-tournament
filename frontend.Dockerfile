@@ -24,7 +24,7 @@ COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 ENV GOCACHE=/root/.cache/go-build
-RUN --mount=type=cache,target="/root/.cache/go-build" make build-frontend -j 
+RUN --mount=type=cache,target="/root/.cache/go-build" make frontend-build -j 
 
 # Production image, copy all the files and run next
 FROM base AS runner

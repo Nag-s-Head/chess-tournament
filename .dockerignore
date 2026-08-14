@@ -23,7 +23,6 @@ backend/vendor
 !test.env
 
 # Docker
-*.Dockerfile
 docker-compose.yml
 .docker-ignore
 

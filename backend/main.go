@@ -31,13 +31,14 @@ func main() {
 		return
 	}
 
+	slog.Info("Database connected successfully")
+
 	addr := os.Getenv("ADDR")
 	if addr == "" {
 		slog.Info("Using default ADDR")
+		addr = DefaultAddr
 	}
-	addr = DefaultAddr
 
-	slog.Info("Database connected successfully")
 	slog.Info("Starting Chess Fest Reading server", "addr", addr)
 
 	mux := http.NewServeMux()

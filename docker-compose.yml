@@ -30,7 +30,11 @@ services:
         - action: rebuild
           path: frontend
         - action: rebuild
-          path: ./go.mod ./go.sum ./Makefile
+          path: go.mod
+        - action: rebuild
+          path: go.sum
+        - action: rebuild
+          path: Makefile
   backend:
     build:
       context: .
@@ -55,7 +59,11 @@ services:
         - action: rebuild
           path: backend
         - action: rebuild
-          path: ./go.mod ./go.sum ./Makefile
+          path: go.mod
+        - action: rebuild
+          path: go.sum
+        - action: rebuild
+          path: Makefile
 networks:
   net:
     name: "Chess Fest Reading Network"
