@@ -6,10 +6,10 @@ RUN go mod download
 
 FROM with_go_mod AS build
 WORKDIR /build
-COPY ./go.mod ./go.sum ./
+COPY ./go.mod ./go.sum ./Makefile ./
 COPY ./backend ./backend
 ENV GOCACHE=/root/.cache/go-build
-RUN --mount=type=cache,target="/root/.cache/go-build" make backend
+RUN --mount=type=cache,target="/root/.cache/go-build" make build-backend -j
 
 FROM initial AS release
 

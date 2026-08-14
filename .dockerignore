@@ -1,0 +1,8 @@
+.git
+.github
+node_modules
+*.orig
+*.md
+*_test.go
+*.test.ts
+*.test.tsx

@@ -1,10 +1,10 @@
-build: frontend backend
+build: build-frontend build-backend
 	echo "Built"
 
 frontend-deps:
 	cd frontend && pnpm i
 
-frontend: frontend-deps
+build-frontend: frontend-deps
 	cd frontend && pnpm build
 
 backend-deps:
@@ -19,7 +19,7 @@ frontend-generate: frontend-deps backend-deps
 generate: frontend-generate backend-generate
 	echo "Codegen Done"
 
-backend: backend-deps backend-generate
+build-backend: backend-deps backend-generate
 	cd backend && go build 
 
 frontend-test: frontend-deps
