@@ -1,18 +1,17 @@
-
 name: "Chess Fest Reading Knockout Test Server"
 services:
   database:
     image: "postgres:latest"
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: magnus
       POSTGRES_PASSWORD: bong-cloud
-      POSTGRES_DB: chess-league
+      POSTGRES_DB: knockout-tournament
     networks:
       - net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U magnus -d chess-league"]
+      test: ["CMD-SHELL", "pg_isready -U magnus -d knockout-tournament"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -37,9 +36,15 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
-      DATABASE_URL: "user=magnus password=bong-cloud dbname=chess-league host=database port=5432 sslmode=disable"
+      DATABASE_URL: "user=magnus password=bong-cloud dbname=knockout-tournament host=database port=5432 sslmode=disable"
+      GITHUB_ORGANISATION: Nag-s-Head
+      OAUTH_CLIENT_ID: "test"
+      OAUTH_CLIENT_SECRET: "test"
+      ADDR: "0.0.0.0:8081"
+    expose:
+      - "8081"
     networks:
       - net
     depends_on:

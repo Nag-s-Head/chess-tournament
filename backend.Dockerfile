@@ -6,13 +6,12 @@ RUN go mod download
 
 FROM with_go_mod AS build
 WORKDIR /build
-COPY ./go.mod ./go.sum ./Makefile ./
+COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 COPY ./backend ./backend
 ENV GOCACHE=/root/.cache/go-build
 RUN --mount=type=cache,target="/root/.cache/go-build" make build-backend -j
 
 FROM initial AS release
-
 RUN useradd -m app
 WORKDIR /home/app
 USER app

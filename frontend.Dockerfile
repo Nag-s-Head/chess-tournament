@@ -16,18 +16,14 @@ FROM with-tools AS builder
 WORKDIR /app
 COPY ./frontend/ ./frontend/
 COPY --from=deps /app/node_modules ./frontend/node_modules
-COPY ./go.mod ./go.sum ./
-
-ENV GOROOT="/usr/lib/go"
-ENV GOPATH="/go"
-ENV PATH="/go/bin:$PATH"
-COPY ./go.mod ./go.sum ./Makefile ./
+COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+ENV GOCACHE=/root/.cache/go-build
 RUN --mount=type=cache,target="/root/.cache/go-build" make build-frontend -j 
 
 # Production image, copy all the files and run next

@@ -1,3 +1,7 @@
+include test.env
+DATABASE_URL := $(shell echo $(DATABASE_URL) | sed 's/"//g')
+export DATABASE_URL
+
 build: build-frontend build-backend
 	echo "Built"
 
@@ -22,13 +26,23 @@ generate: frontend-generate backend-generate
 build-backend: backend-deps backend-generate
 	cd backend && go build 
 
-frontend-test: frontend-deps
+docker-images:
+	docker compose up -d
+
+nuke-db:
+	docker compose down database
+	docker container rm chessfestreadingknockouttestserver-database-1 || docker compose up database -d
+
+psql:
+	docker exec -it -u postgres nagsknightschessleaguetestserver-database-1 bash -c "PG_PASSWORD=bong-cloud psql -U magnus -d knockout-tournament"
+
+frontend-test: frontend-deps generate
 	cd frontend && pnpm test
 
-backend-test: backend-deps
+backend-test: backend-deps docker-images generate
 	cd backend && go test ./... -timeout=60s
 
-test: frontend-test backend-test generate
+test: frontend-test backend-test
 	$(MAKE) lint
 
 backend-format:

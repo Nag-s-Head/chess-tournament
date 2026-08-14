@@ -1,8 +1,38 @@
-.git
-.github
-node_modules
+# Git
+.git/
+.github/
+.gitignore
+
+# Code
+frontend/node_modules/
+frontend/.next/
+backend/backend
+frontend/test-results/
+*.exe
+
+backend/vendor
 *.orig
 *.md
 *_test.go
 *.test.ts
 *.test.tsx
+*.spec.ts
+*.spec.tsx
+*.log
+*.env
+!test.env
+
+# Docker
+*.Dockerfile
+docker-compose.yml
+.docker-ignore
+
+# IDEs & Editor Files
+.vscode/
+.idea/
+*.swp
+*.orig
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
