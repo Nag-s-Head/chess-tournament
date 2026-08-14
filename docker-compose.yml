@@ -1,0 +1,57 @@
+
+name: "Chess Fest Reading Knockout Test Server"
+services:
+  database:
+    image: "postgres:latest"
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: magnus
+      POSTGRES_PASSWORD: bong-cloud
+      POSTGRES_DB: chess-league
+    networks:
+      - net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U magnus -d chess-league"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - net
+    develop:
+      watch:
+        - action: rebuild
+          path: frontend
+        - action: rebuild
+          path: ./go.mod ./go.sum ./Makefile
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: "user=magnus password=bong-cloud dbname=chess-league host=database port=5432 sslmode=disable"
+    networks:
+      - net
+    depends_on:
+      database:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: backend
+        - action: rebuild
+          path: ./go.mod ./go.sum ./Makefile
+networks:
+  net:
+    name: "Chess Fest Reading Network"
+    driver: bridge
