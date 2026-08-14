@@ -19,13 +19,13 @@ make build -j # Builds all parts of the app
 
 # Or if you want to build just the backend or frontend
 make backend-build -j
-make build-frontned -j
+make build-frontend -j
 
 make test -j # Runs the tests and linters on the code
 
 # Or if you want to test just the backend or frontend
 make test-backend -j
-make test-frontned -j
+make test-frontend -j
 
 make all -j # Runs the builds and tests
 
