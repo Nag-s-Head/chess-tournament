@@ -1,0 +1,22 @@
+FROM golang:1.26.5-trixie AS initial
+
+FROM initial AS with_go_mod
+COPY ./go.mod ./go.sum ./
+RUN go mod download
+
+FROM with_go_mod AS build
+WORKDIR /build
+COPY ./go.mod ./go.sum ./
+COPY ./backend ./backend
+ENV GOCACHE=/root/.cache/go-build
+RUN --mount=type=cache,target="/root/.cache/go-build" make backend
+
+FROM initial AS release
+
+RUN useradd -m app
+WORKDIR /home/app
+USER app
+
+EXPOSE 8080
+COPY --from=build /build/backend/backend .
+CMD ["./backend"]

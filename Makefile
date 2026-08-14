@@ -7,22 +7,25 @@ frontend-deps:
 frontend: frontend-deps
 	cd frontend && pnpm build
 
-backend-generate:
+backend-deps:
+	go mod download
+
+backend-generate: backend-deps
 	cd backend && go generate ./...
 
-frontend-generate: frontend-deps
+frontend-generate: frontend-deps backend-deps
 	cd frontend && go generate ./...
 
 generate: frontend-generate backend-generate
 	echo "Codegen Done"
 
-backend: backend-generate
+backend: backend-deps backend-generate
 	cd backend && go build 
 
 frontend-test: frontend-deps
 	cd frontend && pnpm test
 
-backend-test:
+backend-test: backend-deps
 	cd backend && go test ./... -timeout=60s
 
 test: frontend-test backend-test generate
@@ -40,7 +43,7 @@ format: backend-format frontend-format
 frontend-lint: frontend-deps
 	cd frontend && pnpm lint
 
-backend-lint:
+backend-lint: backend-deps
 	cd backend && go vet ./...
 
 lint: frontend-lint backend-lint
