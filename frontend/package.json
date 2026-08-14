@@ -31,6 +31,7 @@
     "jest-environment-jsdom": "^30.4.1",
     "prettier": "^3.9.6",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.28.0"

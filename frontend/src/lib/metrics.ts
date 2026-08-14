@@ -1,4 +1,4 @@
-import client from 'prom-client';
+import client from "prom-client";
 
 // Prevent re-registering metrics in Next.js development mode
 const globalForMetrics = global as unknown as { metricsInitialized: boolean };
