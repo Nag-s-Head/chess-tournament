@@ -27,7 +27,7 @@ backend-build: backend-deps backend-generate
 	cd backend && go build 
 
 docker-images:
-	docker compose up -d
+	docker compose up -d --build
 
 nuke-db:
 	docker compose down database
