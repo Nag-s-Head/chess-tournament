@@ -7,8 +7,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/Nag-s-Head/knockout-tournament/backend/db"
-	"github.com/Nag-s-Head/knockout-tournament/backend/security"
+	"github.com/Nag-s-Head/chess-tournament/backend/db"
+	"github.com/Nag-s-Head/chess-tournament/backend/security"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )

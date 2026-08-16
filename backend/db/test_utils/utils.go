@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Nag-s-Head/knockout-tournament/backend/db"
-	psqldb "github.com/Nag-s-Head/knockout-tournament/backend/db/psql_db"
+	"github.com/Nag-s-Head/chess-tournament/backend/db"
+	psqldb "github.com/Nag-s-Head/chess-tournament/backend/db/psql_db"
 	"github.com/stretchr/testify/require"
 )
 

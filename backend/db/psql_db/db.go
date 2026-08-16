@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Nag-s-Head/knockout-tournament/backend/db/migrations"
+	"github.com/Nag-s-Head/chess-tournament/backend/db/migrations"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )

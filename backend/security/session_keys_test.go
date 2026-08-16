@@ -3,7 +3,7 @@ package security_test
 import (
 	"testing"
 
-	"github.com/Nag-s-Head/knockout-tournament/backend/security"
+	"github.com/Nag-s-Head/chess-tournament/backend/security"
 	"github.com/stretchr/testify/require"
 )
 

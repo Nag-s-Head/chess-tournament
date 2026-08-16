@@ -1,4 +1,4 @@
-module github.com/Nag-s-Head/knockout-tournament
+module github.com/Nag-s-Head/chess-tournament
 
 go 1.26.3
 

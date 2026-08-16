@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Nag-s-Head/knockout-tournament/backend/db/model"
-	testutils "github.com/Nag-s-Head/knockout-tournament/backend/db/test_utils"
+	"github.com/Nag-s-Head/chess-tournament/backend/db/model"
+	testutils "github.com/Nag-s-Head/chess-tournament/backend/db/test_utils"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )

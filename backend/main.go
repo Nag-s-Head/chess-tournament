@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	psqldb "github.com/Nag-s-Head/knockout-tournament/backend/db/psql_db"
+	psqldb "github.com/Nag-s-Head/chess-tournament/backend/db/psql_db"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 

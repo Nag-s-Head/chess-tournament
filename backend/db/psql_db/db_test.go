@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	testutils "github.com/Nag-s-Head/knockout-tournament/backend/db/test_utils"
+	testutils "github.com/Nag-s-Head/chess-tournament/backend/db/test_utils"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 )
