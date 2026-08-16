@@ -8,7 +8,7 @@ build: frontend-build backend-build
 frontend-deps:
 	cd frontend && pnpm i
 
-frontend-build: frontend-deps
+frontend-build: frontend-deps generate
 	cd frontend && pnpm build
 
 backend-deps:
