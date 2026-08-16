@@ -4,7 +4,7 @@ The website for promoting and running a knockout-style chess tournament.
 
 ## Developer Guide
 
-This web app has two parts: a Go backend, and a NextJS frontend.
+This web app has two parts: a Go backend, and a NextJS frontend. It is important to run `make generate -j` when you first use this proejct, or whenever you change the backend API.
 
 ### Local Setup
 
@@ -37,11 +37,11 @@ make psql # Enters a shell with psql on the test database
 
 #### Backend
 
-| Variable            | Usage                                                                         | Example                                                                                              |
-| ------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Variable            | Usage                                                                         | Example                                                                                           |
+| ------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | DATABASE_URL        | The full URL of the Postgres database                                         | `user=magnus password=bong-cloud dbname=chess-tournament host=database port=5432 sslmode=disable` |
 | GITHUB_ORGANISATION | The full name of the organisation                                             | `Nag-s-Head`, as seen in our repo's URL `https://github.com/Nag-s-Head/chess-tournament`          |
-| OAUTH_CLIENT_ID     | Used for admin portal authentication, created under Github developer settings | `1234...`                                                                                            |
-| OAUTH_CLIENT_SECRET | Used for admin portal authentication, created under Github developer settings | `1234...`                                                                                            |
-| TEST_MODE           | When enabled this uses a mocked Oauth implementation                          | `true` or omit to disable                                                                            |
-| ADDR                | Bind address of the application                                               | `0.0.0.0:8080` (the default value)                                                                   |
+| OAUTH_CLIENT_ID     | Used for admin portal authentication, created under Github developer settings | `1234...`                                                                                         |
+| OAUTH_CLIENT_SECRET | Used for admin portal authentication, created under Github developer settings | `1234...`                                                                                         |
+| TEST_MODE           | When enabled this uses a mocked Oauth implementation                          | `true` or omit to disable                                                                         |
+| ADDR                | Bind address of the application                                               | `0.0.0.0:8080` (the default value)                                                                |
