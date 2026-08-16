@@ -13,6 +13,13 @@ type HealthCheckResp struct {
 	Time   time.Time `json:"time"`
 }
 
+// Success response for the health check
+// swagger:response healthCheckResponse
+type healthCheckResponseWrapper struct {
+	// in: body
+	Body HealthCheckResp
+}
+
 // swagger:route GET /health system getHealthCheck
 //
 // # Check API health
@@ -21,8 +28,8 @@ type HealthCheckResp struct {
 // - application/json
 //
 // Responses:
-//	200:
-//	  healthCheckResponse
+//
+//	200: healthCheckResponse
 func handleHealthCheck() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		utils.WriteJson(w, HealthCheckResp{

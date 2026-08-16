@@ -1,10 +1,11 @@
 package main
 
 import (
-	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/charmbracelet/log"
 )
 
 //go:generate go run swagger.go
@@ -14,11 +15,11 @@ func main() {
 	const filename = "swagger.gen.json"
 	wd, err := os.Getwd()
 	if err != nil {
-		slog.Error("Cannot get working directory", "err", err)
+		log.Error("Cannot get working directory", "err", err)
 		os.Exit(1)
 	}
 
-	slog.Info("Generating Swagger file from Go code")
+	log.Info("Generating Swagger file from Go code")
 	goSwagger := exec.Command(
 		"go",
 		"run",
@@ -35,11 +36,11 @@ func main() {
 
 	err = goSwagger.Run()
 	if err != nil {
-		slog.Error("Cannot execute Go Swagger", "err", err)
+		log.Error("Cannot execute Go Swagger", "err", err)
 		os.Exit(1)
 	}
 
-	slog.Info("Validating generated Swagger spec...")
+	log.Info("Validating generated Swagger spec...")
 	validateCmd := exec.Command(
 		"go",
 		"run",
@@ -52,11 +53,11 @@ func main() {
 	validateCmd.Stderr = os.Stderr
 
 	if err := validateCmd.Run(); err != nil {
-		slog.Error("Swagger validation failed! Check your annotations.", "err", err)
+		log.Error("Swagger validation failed! Check your annotations.", "err", err)
 		os.Exit(1)
 	}
 
-	slog.Info("Generating frontend API client...")
+	log.Info("Generating frontend API client...")
 	typescriptSwagger := exec.Command("pnpm",
 		"exec",
 		"swagger-typescript-api",
@@ -74,7 +75,7 @@ func main() {
 
 	err = typescriptSwagger.Run()
 	if err != nil {
-		slog.Error("Cannot execute Typescript Swagger", "err", err)
+		log.Error("Cannot execute Typescript Swagger", "err", err)
 		os.Exit(1)
 	}
 }
