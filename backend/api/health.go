@@ -1,10 +1,10 @@
-package main
+package api
 
 import (
 	"net/http"
 	"time"
 
-	"github.com/Nag-s-Head/chess-tournament/backend/utils"
+	httputils "github.com/Nag-s-Head/chess-tournament/backend/lib/http_utils"
 )
 
 // swagger:model
@@ -32,7 +32,7 @@ type healthCheckResponseWrapper struct {
 //	200: healthCheckResponse
 func handleHealthCheck() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		utils.WriteJson(w, HealthCheckResp{
+		httputils.WriteJson(w, HealthCheckResp{
 			Status: "OK",
 			Time:   time.Now(),
 		})

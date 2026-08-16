@@ -16,11 +16,10 @@ package main
 
 import (
 	"log/slog"
-	"net/http"
 	"os"
 
+	"github.com/Nag-s-Head/chess-tournament/backend/api"
 	psqldb "github.com/Nag-s-Head/chess-tournament/backend/db/psql_db"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 const DefaultAddr = "0.0.0.0:8080"
@@ -54,15 +53,9 @@ func main() {
 	}
 
 	slog.Info("Starting Chess Fest Reading server", "addr", addr)
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", handleHealthCheck())
-	mux.Handle("/metrics", promhttp.Handler())
-
-	handler := prometheusMiddleware(mux)
-	err = http.ListenAndServe(addr, handler)
+	err = api.Start(addr, database)
 	if err != nil {
-		slog.Error("Could not start", "err", err, "addr", addr)
+		slog.Error("Server could not start", "err", err)
 	}
 
 	slog.Warn("Server has died (very sad)")
