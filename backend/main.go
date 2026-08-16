@@ -1,3 +1,17 @@
+// Package classification API.
+//
+// Chess Tournament API.
+//
+//	Schemes: http, https
+//	Version: 1.0.0
+//
+//	Consumes:
+//	- application/json
+//
+//	Produces:
+//	- application/json
+//
+// swagger:meta
 package main
 
 import (
@@ -42,9 +56,7 @@ func main() {
 	slog.Info("Starting Chess Fest Reading server", "addr", addr)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health-check", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
-	})
+	mux.HandleFunc("GET /health-check", handleHealthCheck())
 	mux.Handle("/metrics", promhttp.Handler())
 
 	handler := prometheusMiddleware(mux)

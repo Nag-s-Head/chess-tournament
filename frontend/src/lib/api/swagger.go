@@ -39,6 +39,23 @@ func main() {
 		os.Exit(1)
 	}
 
+	slog.Info("Validating generated Swagger spec...")
+	validateCmd := exec.Command(
+		"go",
+		"run",
+		"github.com/go-swagger/go-swagger/cmd/swagger",
+		"validate",
+		filename,
+	)
+
+	validateCmd.Stdout = os.Stdout
+	validateCmd.Stderr = os.Stderr
+
+	if err := validateCmd.Run(); err != nil {
+		slog.Error("Swagger validation failed! Check your annotations.", "err", err)
+		os.Exit(1)
+	}
+
 	slog.Info("Generating frontend API client...")
 	typescriptSwagger := exec.Command("pnpm",
 		"exec",
