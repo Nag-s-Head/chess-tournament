@@ -56,7 +56,7 @@ func main() {
 	slog.Info("Starting Chess Fest Reading server", "addr", addr)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health-check", handleHealthCheck())
+	mux.HandleFunc("GET /health", handleHealthCheck())
 	mux.Handle("/metrics", promhttp.Handler())
 
 	handler := prometheusMiddleware(mux)
