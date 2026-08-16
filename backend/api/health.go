@@ -22,6 +22,8 @@ type healthCheckResponseWrapper struct {
 
 // swagger:route GET /health system getHealthCheck
 //
+// # Health check for the backend
+//
 // # Check API health
 //
 // Produces:

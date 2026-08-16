@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: magnus
       POSTGRES_PASSWORD: bong-cloud
-      POSTGRES_DB: knockout-tournament
+      POSTGRES_DB: chess-tournament
     networks:
       - net
     healthcheck:
@@ -21,6 +21,8 @@ services:
       dockerfile: frontend.Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      INTERNAL_API_URL: "http://backend:8081/"
     depends_on:
       - backend
     networks:
@@ -42,7 +44,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      DATABASE_URL: "user=magnus password=bong-cloud dbname=knockout-tournament host=database port=5432 sslmode=disable"
+      DATABASE_URL: "user=magnus password=bong-cloud dbname=chess-tournament host=database port=5432 sslmode=disable"
       GITHUB_ORGANISATION: Nag-s-Head
       OAUTH_CLIENT_ID: "test"
       OAUTH_CLIENT_SECRET: "test"
