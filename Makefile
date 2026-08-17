@@ -8,7 +8,7 @@ build: frontend-build backend-build
 frontend-deps:
 	cd frontend && pnpm i
 
-frontend-build: frontend-deps
+frontend-build: frontend-deps frontend-generate
 	cd frontend && pnpm build
 
 backend-deps:
@@ -27,7 +27,7 @@ backend-build: backend-deps backend-generate
 	cd backend && go build 
 
 docker-images:
-	docker compose up -d
+	docker compose up -d --build
 
 nuke-db:
 	docker compose down database
