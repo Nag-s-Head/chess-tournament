@@ -17,7 +17,7 @@ import (
 )
 
 const ApiAddress = "0.0.0.0:8082"
-const maxTries = 10
+const maxTries = 20
 
 var isStarted bool
 var apiStart sync.Mutex
