@@ -1,8 +1,14 @@
 FROM node:25-alpine AS base
 RUN npm i -g pnpm@10.28.0
 
+FROM golang:1.26.3-alpine AS golang
+
 FROM base AS with-tools
-RUN apk add --no-cache go make
+RUN apk add --no-cache make
+
+# Go is copied from the go alpine container to keep the version pegged
+COPY --from=golang /usr/local/go /usr/local/go
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Install dependencies only when needed
 FROM with-tools AS deps
@@ -14,7 +20,7 @@ RUN pnpm i --frozen-lockfile
 # Rebuild the source code only when needed
 FROM with-tools AS builder
 WORKDIR /app
-COPY ./frontend/ ./frontend/
+COPY ./ ./
 COPY --from=deps /app/node_modules ./frontend/node_modules
 COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 
@@ -24,7 +30,9 @@ COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 ENV GOCACHE=/root/.cache/go-build
-RUN --mount=type=cache,target="/root/.cache/go-build" make frontend-build -j 
+RUN --mount=type=cache,target="/root/.cache/go-build" \
+  --mount=type=cache,target="/app/frontend/.next/cache" \
+  make frontend-build -j 
 
 # Production image, copy all the files and run next
 FROM base AS runner

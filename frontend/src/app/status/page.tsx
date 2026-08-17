@@ -1,5 +1,7 @@
 import { apiClient } from "@/lib/api/api";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const backendStatus = await apiClient.health
     .getHealthCheck()
