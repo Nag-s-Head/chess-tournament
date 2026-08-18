@@ -11,6 +11,9 @@ frontend-deps:
 frontend-build: frontend-deps frontend-generate
 	cd frontend && pnpm build
 
+frontend-dev: frontend-deps frontend-generate
+	cd frontend && INTERNAL_API_URL=localhost:8081 pnpm dev
+
 backend-deps:
 	go mod download
 
