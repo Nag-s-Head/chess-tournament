@@ -6,6 +6,7 @@
 # Code
 frontend/node_modules/
 frontend/.next/
+frontend/out/
 backend/backend
 frontend/test-results/
 *.exe

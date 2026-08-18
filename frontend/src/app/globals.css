@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0f;
+  --foreground: #f0f0f5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-outfit);
   --font-mono: var(--font-geist-mono);
+
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+
+  --animate-ticket-glow: ticket-glow 3s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out both;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #fafaf9;
+    --foreground: #1c1917;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@keyframes ticket-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(251, 191, 36, 0.15),
+      0 0 60px rgba(251, 191, 36, 0.05);
+  }
+
+  50% {
+    box-shadow:
+      0 0 30px rgba(251, 191, 36, 0.3),
+      0 0 80px rgba(251, 191, 36, 0.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
