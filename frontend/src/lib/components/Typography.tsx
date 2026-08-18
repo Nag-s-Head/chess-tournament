@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type ElementType } from "react";
+import { type ComponentPropsWithoutRef } from "react";
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 type HeadingSize = "xl" | "lg" | "md" | "sm";

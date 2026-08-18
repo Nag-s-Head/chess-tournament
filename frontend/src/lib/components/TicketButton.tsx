@@ -1,4 +1,4 @@
-"use client";
+import Link from "next/link";
 
 interface TicketButtonProps {
   className?: string;
@@ -6,7 +6,7 @@ interface TicketButtonProps {
 
 export function TicketButton({ className = "" }: TicketButtonProps) {
   return (
-    <a
+    <Link
       href="#"
       title="Coming soon — tickets will be available on Pretix"
       className={`
@@ -23,13 +23,12 @@ export function TicketButton({ className = "" }: TicketButtonProps) {
         animate-ticket-glow
         ${className}
       `}
-      onClick={(e) => e.preventDefault()}
     >
       <span className="relative z-10 flex items-center gap-2">
         <TicketIcon />
         Get Tickets
       </span>
-    </a>
+    </Link>
   );
 }
 

@@ -6,6 +6,7 @@ import {
   LICENSE_NAME,
   LICENSE_URL,
 } from "@/lib/constants";
+import Link from "next/link";
 
 interface FooterLink {
   label: string;
@@ -15,11 +16,11 @@ interface FooterLink {
 }
 
 const footerLinks: FooterLink[] = [
-  { label: "System Status", href: "/status" },
   { label: "Code of Conduct", href: "#", comingSoon: true },
-  { label: "Source Code", href: SOURCE_CODE_URL, external: true },
   { label: "Sponsors", href: "#", comingSoon: true },
   { label: "FAQ", href: "#", comingSoon: true },
+  { label: "Source Code", href: SOURCE_CODE_URL, external: true },
+  { label: "System Status", href: "/status" },
 ];
 
 export function Footer() {
@@ -30,7 +31,7 @@ export function Footer() {
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
             {footerLinks.map((link) => (
               <li key={link.label}>
-                <a
+                <Link
                   href={link.href}
                   className="text-sm text-zinc-400 transition-colors hover:text-amber-400"
                   title={link.comingSoon ? "Coming soon" : undefined}
@@ -39,7 +40,7 @@ export function Footer() {
                     : {})}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -49,14 +50,14 @@ export function Footer() {
 
         <Text size="sm" variant="muted" className="text-center text-zinc-500">
           © {COPYRIGHT_YEAR} {COPYRIGHT_HOLDER}. Licensed under the{" "}
-          <a
+          <Link
             href={LICENSE_URL}
             className="underline underline-offset-2 transition-colors hover:text-amber-400"
             target="_blank"
             rel="noopener noreferrer"
           >
             {LICENSE_NAME}
-          </a>
+          </Link>
           .
         </Text>
       </div>
