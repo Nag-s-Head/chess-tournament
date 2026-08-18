@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api/api";
+import { Heading, Text } from "@/lib/components/Typography";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +13,12 @@ export default async function Page() {
     });
 
   return (
-    <div>
-      <h1>System Status</h1>
-      <p className={backendStatus ? "text-green-500" : "text-red-500"}>
+    <div className="flex flex-col gap-1 text-center p-5">
+      <Heading>System Status</Heading>
+      <Text className="text-green-500">Frontend Status: OK</Text>
+      <Text className={backendStatus ? "text-green-500" : "text-red-500"}>
         Backend Status: {backendStatus ? "OK" : "FAILED"}
-      </p>
+      </Text>
     </div>
   );
 }
