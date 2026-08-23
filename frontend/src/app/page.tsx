@@ -1,7 +1,11 @@
 import { Heading, Text } from "@/lib/components/Typography";
 import { TicketButton } from "@/lib/components/TicketButton";
 import { Footer } from "@/lib/components/Footer";
-import { TOURNAMENT_NAME, TOURNAMENT_TAGLINE } from "@/lib/constants";
+import {
+  TOURNAMENT_DATE_TIME,
+  TOURNAMENT_NAME,
+  TOURNAMENT_TAGLINE,
+} from "@/lib/constants";
 
 export default function Home() {
   return (
@@ -35,6 +39,17 @@ export default function Home() {
           >
             {TOURNAMENT_NAME}
           </Heading>
+
+          <Text
+            size="lg"
+            className="max-w-2xl animate-fade-in-up [animation-delay:200ms] text-zinc-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+            style={{
+              textShadow:
+                "0 1px 8px rgba(0,0,0,0.9), 0 2px 16px rgba(0,0,0,0.5)",
+            }}
+          >
+            {TOURNAMENT_DATE_TIME}
+          </Text>
 
           <Text
             size="lg"
