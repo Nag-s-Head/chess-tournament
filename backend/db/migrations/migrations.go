@@ -46,6 +46,8 @@ CREATE TABLE current_tournament (
 );
 
 CREATE UNIQUE INDEX idx_current_tournament_one_row ON current_tournament ( ( one_row ) );
+
+INSERT INTO current_tournament (tournament_id) VALUES (NULL);
 			`,
 		},
 	}
