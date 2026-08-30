@@ -8,7 +8,7 @@ import (
 	"runtime"
 )
 
-func WriteJson(w http.ResponseWriter, data any) error {
+func WriteJson(w http.ResponseWriter, data any) {
 	w.Header().Set("Content-Type", "application/json")
 
 	_, file, line, _ := runtime.Caller(1)
@@ -16,12 +16,11 @@ func WriteJson(w http.ResponseWriter, data any) error {
 	bytes, err := json.Marshal(data)
 	if err != nil {
 		slog.Error("Cannot marshal JSON", "err", err, "file", file, "line", line)
-		return errors.Join(errors.New("Cannot marshal JSON"), err)
+		panic(errors.Join(errors.New("cannot marshal JSON"), err))
 	}
 
 	_, err = w.Write(bytes)
 	if err != nil {
-		return errors.Join(errors.New("Cannot write data"), err)
+		panic(errors.Join(errors.New("cannot write data"), err))
 	}
-	return nil
 }

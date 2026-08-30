@@ -20,6 +20,7 @@ import (
 
 	"github.com/Nag-s-Head/chess-tournament/backend/api"
 	psqldb "github.com/Nag-s-Head/chess-tournament/backend/db/psql_db"
+	testmode "github.com/Nag-s-Head/chess-tournament/backend/test_mode"
 )
 
 const DefaultAddr = "0.0.0.0:8080"
@@ -28,6 +29,10 @@ func main() {
 	slog.Info("Starting...")
 
 	defer os.Exit(1)
+
+	if testmode.IsTestMode() {
+		slog.Warn("Test mode is enabled - admin auth is being bypassed")
+	}
 
 	slog.Info("Connecting to the database...")
 	database, err := psqldb.New()

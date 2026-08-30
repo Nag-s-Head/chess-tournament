@@ -21,6 +21,7 @@ const footerLinks: FooterLink[] = [
   { label: "FAQ", href: "#", comingSoon: true },
   { label: "Source Code", href: SOURCE_CODE_URL, external: true },
   { label: "System Status", href: "/status" },
+  { label: "Admin Portal", href: "/Admin" },
 ];
 
 export function Footer() {
