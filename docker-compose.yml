@@ -50,6 +50,7 @@ services:
       OAUTH_CLIENT_SECRET: "test"
       ADDR: "0.0.0.0:8081"
       FRONTEND_EXTERNAL_BASE_URL: "http://localhost:3000/"
+      TEST_MODE: "true" 
     expose:
       - "8081"
     networks:
