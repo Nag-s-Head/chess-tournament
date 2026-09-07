@@ -10,17 +10,34 @@ function getBaseUrl(): string {
 
 export const apiClient = new Api({
   baseUrl: getBaseUrl(),
-  customFetch: (input, init?) => {
+  customFetch: async (input, init?) => {
     const baseUrl = getBaseUrl();
     let url = typeof input === "string" ? input : input.toString();
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
     }
+
+    const headers = new Headers(init?.headers);
+
+    if (typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge") {
+      try {
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        const cookieString = cookieStore.toString();
+        if (cookieString) {
+          headers.set("cookie", cookieString);
+        }
+      } catch {
+        // Safe fallback if called outside of a request-scoped context
+      }
+    }
+
     return fetch(url, {
       cache: "no-cache",
       credentials: "include",
       mode: "cors",
       ...init,
+      headers,
     });
   },
 });

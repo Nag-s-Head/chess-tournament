@@ -3,7 +3,6 @@ package auth
 import (
 	"log/slog"
 	"net/http"
-	"strings"
 
 	"github.com/Nag-s-Head/chess-tournament/backend/db"
 	"github.com/Nag-s-Head/chess-tournament/backend/db/model"
@@ -19,8 +18,8 @@ type validateResponseWrapper struct {
 
 // swagger:model
 type ValidateResponse struct {
-	Valid  bool   `json:"valid"`
-	Url    string `json:"url,omitempty"`
+	Valid bool   `json:"valid"`
+	Url   string `json:"url,omitempty"`
 }
 
 // swagger:route GET /auth/validate auth getValidate
@@ -40,8 +39,8 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 		token := getSessionToken(r)
 		if token == "" {
 			httputils.WriteJson(w, ValidateResponse{
-				Valid:  false,
-				Url:    AuthUrl(),
+				Valid: false,
+				Url:   AuthUrl(),
 			})
 			return
 		}
@@ -50,14 +49,14 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 		if err != nil {
 			slog.Warn("User tried to connect with invalid session token", "err", err)
 			httputils.WriteJson(w, ValidateResponse{
-				Valid:  false,
-				Url:    AuthUrl(),
+				Valid: false,
+				Url:   AuthUrl(),
 			})
 			return
 		}
 
 		httputils.WriteJson(w, ValidateResponse{
-			Valid:  true,
+			Valid: true,
 		})
 	}
 }
@@ -66,9 +65,6 @@ func getSessionToken(r *http.Request) string {
 	if cookie, err := r.Cookie(AuthCookie); err == nil && cookie.Value != "" {
 		return cookie.Value
 	}
-	authHeader := r.Header.Get("Authorization")
-	if strings.HasPrefix(authHeader, "Bearer ") {
-		return strings.TrimPrefix(authHeader, "Bearer ")
-	}
-	return authHeader
+	return ""
 }
+

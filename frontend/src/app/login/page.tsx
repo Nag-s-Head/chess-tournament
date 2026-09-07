@@ -13,7 +13,8 @@ export default async function LoginPage() {
     }
 
     authUrl = res.data?.url || "/auth/login";
-  } catch {
+  } catch (error: unknown) {
+    console.error("Login page validation failed:", error);
     authUrl = "/auth/login";
   }
 

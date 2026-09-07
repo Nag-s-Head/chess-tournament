@@ -80,6 +80,7 @@ func HandleCallback(database db.Db) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := r.URL.Query().Get("code")
 		if isTestMode() {
+			slog.Warn("Test mode is enabled, using mocked callback codes")
 			switch code {
 			case "valid":
 				adminUser, err := model.AdminLogin(database, "Test Admin", "testadmin", model.GetRemoteAddr(r), r.UserAgent())

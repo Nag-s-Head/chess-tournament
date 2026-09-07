@@ -7,15 +7,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const cookieHeader = request.headers.get("cookie") || "";
-  const authHeader = request.headers.get("authorization");
-
   try {
+    const cookieHeader = request.headers.get("cookie") || "";
     const apiResponse = await apiClient.auth.getValidate({
       headers: {
         cookie: cookieHeader,
-        ...(authHeader ? { authorization: authHeader } : {}),
       },
+      format: "json",
     });
 
     const valid = apiResponse.data?.valid;
@@ -25,8 +23,11 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
+    console.error(
+      "Access to admin portal by unathenticated user was attempted",
+    );
     if (redirectUrl) {
-      return NextResponse.redirect(redirectUrl);
+      return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
 
     return NextResponse.redirect(new URL("/login", request.url));
@@ -37,5 +38,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: ["/admin", "/admin/:path*"],
 };

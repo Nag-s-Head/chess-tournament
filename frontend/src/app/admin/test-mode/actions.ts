@@ -1,6 +1,7 @@
 "use server";
 import { apiClient } from "@/lib/api/api";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import setCookieParser from "set-cookie-parser";
 
 export async function doLogin(token: string) {
@@ -27,4 +28,6 @@ export async function doLogin(token: string) {
       });
     }
   }
+
+  redirect("/login");
 }

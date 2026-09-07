@@ -24,12 +24,9 @@ export default function TestModePage() {
             <button
               onClick={() => {
                 doLogin("valid")
-                  .then(() => {
-                    router.replace("/login");
-                  })
+                  .then(() => {})
                   .catch((error: unknown) => {
                     console.error("Cannot login", error);
-                    router.replace("/auth-error?reason=db_error");
                   });
               }}
               className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors text-sm"
