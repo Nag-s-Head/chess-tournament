@@ -18,21 +18,15 @@ export async function proxy(request: NextRequest) {
       },
     });
 
-    const status = apiResponse.data?.status;
     const valid = apiResponse.data?.valid;
     const redirectUrl = apiResponse.data?.url;
 
-    if (status === "Valid" || valid === true) {
+    if (valid) {
       return NextResponse.next();
     }
 
-    if (status === "Login" || valid === false) {
-      if (redirectUrl) {
-        if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://")) {
-          return NextResponse.redirect(redirectUrl);
-        }
-        return NextResponse.redirect(new URL(redirectUrl, request.url));
-      }
+    if (redirectUrl) {
+      return NextResponse.redirect(redirectUrl);
     }
 
     return NextResponse.redirect(new URL("/login", request.url));

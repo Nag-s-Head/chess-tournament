@@ -11,6 +11,11 @@ import (
 )
 
 func TestHandleLogin(t *testing.T) {
+	t.Parallel()
+	t.Setenv("TEST_MODE", "false")
+	db := testutils.GetDb(t)
+	defer db.Close()
+
 	req := httptest.NewRequest(http.MethodGet, "/auth/login", nil)
 	rr := httptest.NewRecorder()
 
@@ -21,15 +26,16 @@ func TestHandleLogin(t *testing.T) {
 }
 
 func TestHandleTestLogin(t *testing.T) {
+	t.Parallel()
 	t.Setenv("TEST_MODE", "true")
 	db := testutils.GetDb(t)
 	defer db.Close()
 
 	t.Run("Valid test session", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/auth/test-login?session=valid", nil)
+		req := httptest.NewRequest(http.MethodGet, "/auth/callback?code=valid", nil)
 		rr := httptest.NewRecorder()
 
-		handler := auth.HandleTestLogin(db)
+		handler := auth.HandleCallback(db)
 		handler(rr, req)
 
 		require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
@@ -39,32 +45,11 @@ func TestHandleTestLogin(t *testing.T) {
 		require.Equal(t, auth.AuthCookie, cookies[0].Name)
 		require.NotEmpty(t, cookies[0].Value)
 	})
-
-	t.Run("Invalid test session", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/auth/test-login?session=invalid", nil)
-		rr := httptest.NewRecorder()
-
-		handler := auth.HandleTestLogin(db)
-		handler(rr, req)
-
-		require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
-		require.Equal(t, "/auth-error?reason=invalid_session", rr.Header().Get("Location"))
-		require.Empty(t, rr.Result().Cookies())
-	})
-
-	t.Run("Clear session", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/auth/test-login?session=clear", nil)
-		rr := httptest.NewRecorder()
-
-		handler := auth.HandleTestLogin(db)
-		handler(rr, req)
-
-		require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
-		require.Equal(t, "/login", rr.Header().Get("Location"))
-	})
 }
 
 func TestHandleCallbackMissingCode(t *testing.T) {
+	t.Parallel()
+	t.Setenv("TEST_MODE", "false")
 	db := testutils.GetDb(t)
 	defer db.Close()
 

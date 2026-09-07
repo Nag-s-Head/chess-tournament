@@ -2,18 +2,20 @@ import Link from "next/link";
 import { Heading, Text } from "@/lib/components/Typography";
 import { Footer } from "@/lib/components/Footer";
 import { apiClient } from "@/lib/api/api";
-
-async function getAuthUrl(): Promise<string> {
-  try {
-    const res = await apiClient.auth.getValidate();
-    return res.data?.url || "/auth/login";
-  } catch {
-    return "/auth/login";
-  }
-}
+import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
-  const authUrl = await getAuthUrl();
+  let authUrl = "";
+  try {
+    const res = await apiClient.auth.getValidate();
+    if (res.data?.valid) {
+      redirect("/admin");
+    }
+
+    authUrl = res.data?.url || "/auth/login";
+  } catch {
+    authUrl = "/auth/login";
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
@@ -30,7 +32,8 @@ export default async function LoginPage() {
           </Heading>
 
           <Text size="sm" variant="muted" className="mb-8 text-zinc-400">
-            Sign in with your authorized GitHub account to manage the knockout tournament.
+            Sign in with your authorized GitHub account to manage the knockout
+            tournament.
           </Text>
 
           <Link

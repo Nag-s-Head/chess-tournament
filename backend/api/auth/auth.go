@@ -14,7 +14,6 @@ func Register(mux *http.ServeMux, database db.Db) {
 	mux.HandleFunc("GET /auth/login", HandleLogin)
 	mux.HandleFunc("GET /auth/callback", HandleCallback(database))
 	mux.HandleFunc("GET /auth/logout", HandleLogout(database))
-	mux.HandleFunc("GET /auth/test-login", HandleTestLogin(database))
 }
 
 const AuthCookie = "admin-authentication"

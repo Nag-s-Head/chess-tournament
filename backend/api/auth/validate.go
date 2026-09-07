@@ -20,7 +20,6 @@ type validateResponseWrapper struct {
 // swagger:model
 type ValidateResponse struct {
 	Valid  bool   `json:"valid"`
-	Status string `json:"status"`
 	Url    string `json:"url,omitempty"`
 }
 
@@ -42,7 +41,6 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 		if token == "" {
 			httputils.WriteJson(w, ValidateResponse{
 				Valid:  false,
-				Status: "Login",
 				Url:    AuthUrl(),
 			})
 			return
@@ -53,7 +51,6 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 			slog.Warn("User tried to connect with invalid session token", "err", err)
 			httputils.WriteJson(w, ValidateResponse{
 				Valid:  false,
-				Status: "Login",
 				Url:    AuthUrl(),
 			})
 			return
@@ -61,7 +58,6 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 
 		httputils.WriteJson(w, ValidateResponse{
 			Valid:  true,
-			Status: "Valid",
 		})
 	}
 }
@@ -74,5 +70,5 @@ func getSessionToken(r *http.Request) string {
 	if strings.HasPrefix(authHeader, "Bearer ") {
 		return strings.TrimPrefix(authHeader, "Bearer ")
 	}
-	return ""
+	return authHeader
 }

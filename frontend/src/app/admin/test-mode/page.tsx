@@ -1,8 +1,11 @@
-import Link from "next/link";
+"use client";
 import { Heading, Text } from "@/lib/components/Typography";
 import { Footer } from "@/lib/components/Footer";
+import { doLogin } from "./actions";
+import { useRouter } from "next/navigation";
 
 export default function TestModePage() {
+  const router = useRouter();
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-16">
@@ -18,24 +21,29 @@ export default function TestModePage() {
           </Text>
 
           <div className="flex flex-col gap-3">
-            <Link
-              href="/auth/test-login?session=valid"
+            <button
+              onClick={() => {
+                doLogin("valid")
+                  .then(() => {
+                    router.replace("/login");
+                  })
+                  .catch((error: unknown) => {
+                    console.error("Cannot login", error);
+                    router.replace("/auth-error?reason=db_error");
+                  });
+              }}
               className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors text-sm"
             >
               Simulate Valid Admin Login
-            </Link>
-            <Link
-              href="/auth/test-login?session=invalid"
+            </button>
+            <button
+              onClick={() => {
+                router.replace("/auth-error?reason=token_exchange");
+              }}
               className="w-full py-3 px-4 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white font-medium transition-colors text-sm"
             >
               Simulate Invalid Session Token
-            </Link>
-            <Link
-              href="/auth/test-login?session=clear"
-              className="w-full py-3 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium transition-colors text-sm"
-            >
-              Clear Session & Logout
-            </Link>
+            </button>
           </div>
         </div>
       </main>
