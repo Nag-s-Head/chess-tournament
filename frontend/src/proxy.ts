@@ -5,7 +5,7 @@ import { apiClient } from "./lib/api/api";
 export async function proxy(request: NextRequest) {
   try {
     const cookie = request.cookies.get("auth_token");
-    
+
     // Construct the standard Cookie header format
     const cookieHeader = cookie ? `${cookie.name}=${cookie.value}` : "";
 
@@ -15,8 +15,8 @@ export async function proxy(request: NextRequest) {
       },
     });
 
-    const valid = apiResponse.data?.valid;
-    const redirectUrl = apiResponse.data?.url;
+    const valid = apiResponse.valid;
+    const redirectUrl = apiResponse.url;
 
     if (valid) {
       return NextResponse.next();
@@ -26,7 +26,7 @@ export async function proxy(request: NextRequest) {
     console.error(
       "Access to admin portal by unauthenticated user was attempted.",
       "Response:",
-      apiResponse.data,
+      apiResponse,
     );
 
     if (redirectUrl) {

@@ -7,24 +7,25 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
+  let isValid = false;
   try {
-    if ((await apiClient.auth.getValidate()).data?.valid) {
-      redirect("/admin");
-    }
+    isValid = !!(await apiClient.auth.getValidate()).valid;
   } catch (error: unknown) {
     console.error("Checking if logged in failed", error);
   }
 
-  let authUrl: string | undefined;
-  try {
-    const res = await apiClient.auth.getLogin();
-    authUrl = res.data?.url;
-  } catch (error: unknown) {
-    console.error("Getting Login URL failed", error);
+  if (isValid) {
+    redirect("/admin");
   }
 
-  if (!authUrl) {
-    authUrl = "/auth/error?reason=backend_error";
+  let authUrl = "/auth/error?reason=backend_error";
+  try {
+    const data = await apiClient.auth.getLogin();
+    if (data?.url) {
+      authUrl = data.url;
+    }
+  } catch (error: unknown) {
+    console.error("Getting Login URL failed", error);
   }
 
   return (

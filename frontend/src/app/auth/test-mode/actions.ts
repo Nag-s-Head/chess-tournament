@@ -1,33 +1,21 @@
 "use server";
 import { apiClient } from "@/lib/api/api";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import setCookieParser from "set-cookie-parser";
 
 export async function doLogin(token: string) {
-  const resp = await apiClient.auth.postCallback({ code: token });
+  const data = await apiClient.auth.postCallback({ code: token });
 
-  const rawCookies = resp.headers.getSetCookie();
-
-  if (rawCookies && rawCookies.length > 0) {
-    const parsedCookies = setCookieParser.parse(rawCookies);
-    const cookieStore = await cookies();
-
-    for (const cookie of parsedCookies) {
-      cookieStore.set({
-        name: cookie.name,
-        value: cookie.value,
-        path: cookie.path || "/",
-        expires: cookie.expires,
-        maxAge: cookie.maxAge,
-        domain: cookie.domain,
-        secure: cookie.secure,
-        httpOnly: cookie.httpOnly,
-        sameSite: cookie.sameSite as
-          "lax" | "strict" | "none" | boolean | undefined,
-      });
-    }
+  if (!data.valid || !data.token) {
+    redirect(data.url ?? "/auth/error?reason=backend");
   }
+
+  cookieStore.set({
+    name: "auth_token",
+    value: data.token,
+    path: "/",
+    expires: 60 * 60,
+    sameSite: "strict",
+  });
 
   redirect("/admin");
 }

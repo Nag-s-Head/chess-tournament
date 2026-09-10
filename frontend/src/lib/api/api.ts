@@ -1,3 +1,4 @@
+import "server-only";
 import { Api } from "./api.gen";
 
 function getBaseUrl(): string {
@@ -10,34 +11,36 @@ function getBaseUrl(): string {
 
 export const apiClient = new Api({
   baseUrl: getBaseUrl(),
-  customFetch: async (input, init?) => {
+  customFetch: async (input, init) => {
     const baseUrl = getBaseUrl();
     let url = typeof input === "string" ? input : input.toString();
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
     }
 
-    const headers = new Headers(init?.headers);
+    const response = await fetch(url, {
+      cache: "no-store",
+      credentials: "include",
+      ...init,
+    });
 
-    if (typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge") {
+    if (response.ok) {
+      const clone = response.clone();
       try {
-        const { cookies } = await import("next/headers");
-        const cookieStore = await cookies();
-        const cookieString = cookieStore.toString();
-        if (cookieString) {
-          headers.set("cookie", cookieString);
-        }
+        const json = await clone.json();
+        const headers = new Headers(response.headers);
+        headers.set("content-type", "application/json");
+
+        return new Response(JSON.stringify(json), {
+          status: response.status,
+          statusText: response.statusText,
+          headers,
+        });
       } catch {
-        // Safe fallback if called outside of a request-scoped context
+        // Body was not JSON, return original response
       }
     }
 
-    return fetch(url, {
-      cache: "no-cache",
-      credentials: "include",
-      mode: "cors",
-      ...init,
-      headers,
-    });
+    return response;
   },
 });

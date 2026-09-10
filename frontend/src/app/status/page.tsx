@@ -6,7 +6,13 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const backendStatus = await apiClient.health
     .getHealthCheck()
-    .then(() => true)
+    .then((x) => {
+      const good = !!x.status;
+      if (!good) {
+        console.error("Health check failed", "good:", good, "response:", x);
+      }
+      return good;
+    })
     .catch((error: unknown) => {
       console.log("Cannot get backend status", error);
       return false;
