@@ -9,15 +9,17 @@ import (
 )
 
 func WriteJson(w http.ResponseWriter, data any) {
-	w.Header().Set("Content-Type", "application/json")
-
 	_, file, line, _ := runtime.Caller(1)
 
 	bytes, err := json.Marshal(data)
 	if err != nil {
 		slog.Error("Cannot marshal JSON", "err", err, "file", file, "line", line)
-		panic(errors.Join(errors.New("cannot marshal JSON"), err))
+		http.Error(w, `{"error":"internal server error"}`, http.StatusInternalServerError)
+		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
 	_, err = w.Write(bytes)
 	if err != nil {
