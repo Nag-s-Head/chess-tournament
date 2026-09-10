@@ -3,7 +3,8 @@ import { apiClient } from "@/lib/api/api";
 import { redirect } from "next/navigation";
 
 export async function doLogin(token: string) {
-  const data = await apiClient.auth.postCallback({ code: token });
+  const resp = await apiClient.auth.postCallback({ code: token });
+  const data = resp.data;
 
   if (!data.valid || !data.token) {
     redirect(data.url ?? "/auth/error?reason=backend");

@@ -7,9 +7,17 @@ export default async function Page() {
   const backendStatus = await apiClient.health
     .getHealthCheck()
     .then((x) => {
-      const good = !!x.status;
+      const good = !!x.data?.status;
       if (!good) {
-        console.error("Health check failed", "good:", good, "response:", x);
+        x.text().then((text) =>
+          console.error(
+            "Health check failed",
+            "good:",
+            good,
+            "response:",
+            text,
+          ),
+        );
       }
       return good;
     })

@@ -68,11 +68,6 @@ func main() {
 		wd,
 		"-n",
 		"api.gen.ts",
-		"--generate-responses",
-		"--responses",
-		"--unwrap-response-data",
-		"--extract-request-params",
-		"--extract-request-body",
 	)
 	typescriptSwagger.Dir = filepath.Join(projectroot, "frontend")
 	typescriptSwagger.Stdout = os.Stdout

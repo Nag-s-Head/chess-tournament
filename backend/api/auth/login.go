@@ -36,7 +36,7 @@ func init() {
 // Success response for login endpoint
 // swagger:response loginResponse
 type loginResponseWrapper struct {
-	// in: body
+	// in:body
 	Body LoginResponse
 }
 

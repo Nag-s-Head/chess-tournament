@@ -11,36 +11,8 @@ function getBaseUrl(): string {
 
 export const apiClient = new Api({
   baseUrl: getBaseUrl(),
-  customFetch: async (input, init) => {
-    const baseUrl = getBaseUrl();
-    let url = typeof input === "string" ? input : input.toString();
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
-    }
-
-    const response = await fetch(url, {
-      cache: "no-store",
-      credentials: "include",
-      ...init,
-    });
-
-    if (response.ok) {
-      const clone = response.clone();
-      try {
-        const json = await clone.json();
-        const headers = new Headers(response.headers);
-        headers.set("content-type", "application/json");
-
-        return new Response(JSON.stringify(json), {
-          status: response.status,
-          statusText: response.statusText,
-          headers,
-        });
-      } catch {
-        // Body was not JSON, return original response
-      }
-    }
-
-    return response;
+  baseApiParams: {
+    cache: "no-store",
+    format: "json",
   },
 });

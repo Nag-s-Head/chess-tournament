@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage() {
   let isValid = false;
   try {
-    isValid = !!(await apiClient.auth.getValidate()).valid;
+    isValid = !!(await apiClient.auth.getValidate()).data?.valid;
   } catch (error: unknown) {
     console.error("Checking if logged in failed", error);
   }

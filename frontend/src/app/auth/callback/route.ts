@@ -12,9 +12,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const data = await apiClient.auth.postCallback({
+    const resp = await apiClient.auth.postCallback({
       code,
     });
+
+    const data = resp.data;
 
     if (!data?.valid) {
       const errorUrl = data?.url || "/auth/error?reason=token_exchange";

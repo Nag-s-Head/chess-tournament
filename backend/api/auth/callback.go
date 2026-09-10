@@ -15,7 +15,7 @@ import (
 // Success response for callback endpoint
 // swagger:response callbackResponse
 type callbackResponseWrapper struct {
-	// in: body
+	// in:body
 	Body CallbackResponse
 }
 

@@ -12,7 +12,7 @@ import (
 // Success response for validate endpoint
 // swagger:response validateResponse
 type validateResponseWrapper struct {
-	// in: body
+	// in:body
 	Body ValidateResponse
 }
 

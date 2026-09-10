@@ -9,14 +9,15 @@ export async function proxy(request: NextRequest) {
     // Construct the standard Cookie header format
     const cookieHeader = cookie ? `${cookie.name}=${cookie.value}` : "";
 
-    const apiResponse = await apiClient.auth.getValidate({
+    const resp = await apiClient.auth.getValidate({
       headers: {
         Cookie: cookieHeader,
       },
     });
 
-    const valid = apiResponse.valid;
-    const redirectUrl = apiResponse.url;
+    const data = resp.data;
+    const valid = data?.valid;
+    const redirectUrl = data?.url;
 
     if (valid) {
       return NextResponse.next();
@@ -26,7 +27,7 @@ export async function proxy(request: NextRequest) {
     console.error(
       "Access to admin portal by unauthenticated user was attempted.",
       "Response:",
-      apiResponse,
+      resp,
     );
 
     if (redirectUrl) {

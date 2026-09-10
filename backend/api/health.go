@@ -16,7 +16,7 @@ type HealthCheckResp struct {
 // Success response for the health check
 // swagger:response healthCheckResponse
 type healthCheckResponseWrapper struct {
-	// in: body
+	// in:body
 	Body HealthCheckResp
 }
 
