@@ -67,4 +67,3 @@ func getSessionToken(r *http.Request) string {
 	}
 	return ""
 }
-

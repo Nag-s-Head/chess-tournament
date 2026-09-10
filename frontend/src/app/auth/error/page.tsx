@@ -10,7 +10,8 @@ const reasons: Record<string, { title: string; description: string }> = {
   },
   invalid_session: {
     title: "Invalid Session",
-    description: "Your session token is invalid or has expired. Please sign in again.",
+    description:
+      "Your session token is invalid or has expired. Please sign in again.",
   },
   token_exchange: {
     title: "Authentication Failed",
@@ -29,7 +30,13 @@ const reasons: Record<string, { title: string; description: string }> = {
   },
   db_error: {
     title: "Server Error",
-    description: "An internal error occurred while logging you in. Please try again.",
+    description:
+      "An internal error occurred while logging you in. Please try again.",
+  },
+  backend_error: {
+    title: "Server Error",
+    description:
+      "An internal error occurred while logging you in. Please try again.",
   },
   no_code: {
     title: "Missing Authorisation Code",
@@ -43,17 +50,15 @@ const defaultReason = {
   description: "Something went wrong during sign-in. Please try again.",
 };
 
+interface SearchParams {
+  reason?: string;
+}
+
 export default function AuthErrorPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ reason?: string }>;
+  searchParams?: SearchParams;
 }) {
-  const getContent = async () => {
-    const params = await searchParams;
-    const key = params?.reason ?? "";
-    return reasons[key] ?? defaultReason;
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
@@ -67,7 +72,7 @@ export default function AuthErrorPage({
           <ContentFromParams searchParams={searchParams} />
 
           <Link
-            href="/login"
+            href="/auth/login"
             className="mt-8 w-full py-3.5 px-6 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold transition-colors flex items-center justify-center gap-2"
           >
             ← Back to Sign In
@@ -82,10 +87,9 @@ export default function AuthErrorPage({
 async function ContentFromParams({
   searchParams,
 }: {
-  searchParams?: Promise<{ reason?: string }>;
+  searchParams?: SearchParams;
 }) {
-  const params = await searchParams;
-  const key = params?.reason ?? "";
+  const key = searchParams?.reason ?? "";
   const { title, description } = reasons[key] ?? defaultReason;
 
   return (

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import setCookieParser from "set-cookie-parser";
 
 export async function doLogin(token: string) {
-  const resp = await apiClient.auth.getCallback({ code: token });
+  const resp = await apiClient.auth.postCallback({ code: token });
 
   const rawCookies = resp.headers.getSetCookie();
 
@@ -29,5 +29,5 @@ export async function doLogin(token: string) {
     }
   }
 
-  redirect("/login");
+  redirect("/admin");
 }

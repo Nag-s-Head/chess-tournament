@@ -35,7 +35,7 @@ export default function TestModePage() {
             </button>
             <button
               onClick={() => {
-                router.replace("/auth-error?reason=token_exchange");
+                router.replace("/auth/error?reason=token_exchange");
               }}
               className="w-full py-3 px-4 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white font-medium transition-colors text-sm"
             >

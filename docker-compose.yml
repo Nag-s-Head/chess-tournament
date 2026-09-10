@@ -23,6 +23,7 @@ services:
       - "3000:3000"
     environment:
       INTERNAL_API_URL: "http://backend:8081"
+      TEST_MODE: "true" 
     depends_on:
       - backend
     networks:
@@ -37,6 +38,8 @@ services:
           path: go.sum
         - action: rebuild
           path: Makefile
+        - action: rebuild
+          path: backend/api 
   backend:
     build:
       context: .

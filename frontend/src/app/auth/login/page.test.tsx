@@ -5,7 +5,7 @@ jest.mock("@/lib/api/api", () => ({
   apiClient: {
     auth: {
       getValidate: jest.fn().mockResolvedValue({
-        data: { valid: false, status: "Login", url: "/admin/test-mode" },
+        data: { valid: false, status: "Login", url: "/auth/test-mode" },
       }),
     },
   },
@@ -25,6 +25,6 @@ describe("Login Page", () => {
       name: /continue with github/i,
     });
     expect(loginLink).toBeInTheDocument();
-    expect(loginLink).toHaveAttribute("href", "/admin/test-mode");
+    expect(loginLink).toHaveAttribute("href", "/auth/test-mode");
   });
 });

@@ -12,11 +12,11 @@ import (
 func Register(mux *http.ServeMux, database db.Db) {
 	mux.HandleFunc("GET /auth/validate", HandleValidate(database))
 	mux.HandleFunc("GET /auth/login", HandleLogin)
-	mux.HandleFunc("GET /auth/callback", HandleCallback(database))
+	mux.HandleFunc("POST /auth/callback", HandleCallback(database))
 	mux.HandleFunc("GET /auth/logout", HandleLogout(database))
 }
 
-const AuthCookie = "admin-authentication"
+const AuthCookie = "auth_token"
 
 func isTestMode() bool {
 	return os.Getenv("TEST_MODE") == "true"
@@ -40,12 +40,12 @@ func CreateAuthCookie(sessionKey string) *http.Cookie {
 	return cookie
 }
 
-func loginUrl() string {
+func frontendLoginUrl() string {
 	if isTestMode() {
-		return "/admin/test-mode"
+		return "/auth/test-mode"
 	}
 
-	return "/login"
+	return "/auth/login"
 }
 
 func WithAuthentication(db db.Db, next func(*model.AdminUser) func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
@@ -53,17 +53,14 @@ func WithAuthentication(db db.Db, next func(*model.AdminUser) func(http.Response
 		cookie, err := r.Cookie(AuthCookie)
 		if err != nil {
 			slog.Info("A user has tried to access the admin portal without being logged in, redirecting to authentication page")
-
-			http.Redirect(w, r, loginUrl(), http.StatusTemporaryRedirect)
+			http.Redirect(w, r, frontendLoginUrl(), http.StatusTemporaryRedirect)
 			return
 		}
 
 		user, err := model.AdminGetFromSessionKey(db, cookie.Value)
 		if err != nil {
 			slog.Warn("User with invalid authentication tried to access the page", "url", r.URL, "err", err)
-
-			http.SetCookie(w, CreateAuthCookie(""))
-			http.Redirect(w, r, loginUrl(), http.StatusTemporaryRedirect)
+			http.Redirect(w, r, frontendLoginUrl(), http.StatusTemporaryRedirect)
 			return
 		}
 		next(user)(w, r)

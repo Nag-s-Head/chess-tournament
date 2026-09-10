@@ -4,18 +4,27 @@ import { Footer } from "@/lib/components/Footer";
 import { apiClient } from "@/lib/api/api";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
-  let authUrl = "";
   try {
-    const res = await apiClient.auth.getValidate();
-    if (res.data?.valid) {
+    if ((await apiClient.auth.getValidate()).data?.valid) {
       redirect("/admin");
     }
-
-    authUrl = res.data?.url || "/auth/login";
   } catch (error: unknown) {
-    console.error("Login page validation failed:", error);
-    authUrl = "/auth/login";
+    console.error("Checking if logged in failed", error);
+  }
+
+  let authUrl: string | undefined;
+  try {
+    const res = await apiClient.auth.getLogin();
+    authUrl = res.data?.url;
+  } catch (error: unknown) {
+    console.error("Getting Login URL failed", error);
+  }
+
+  if (!authUrl) {
+    authUrl = "/auth/error?reason=backend_error";
   }
 
   return (

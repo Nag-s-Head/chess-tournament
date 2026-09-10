@@ -30,13 +30,13 @@ describe("Proxy Middleware", () => {
   });
 
   it("exports correct matcher config", () => {
-    expect(config.matcher).toBe("/admin/:path*");
+    expect(config.matcher).toEqual(["/admin", "/admin/:path*"]);
   });
 
-  it("bypasses auth validation for /admin/test-mode", async () => {
+  it("bypasses auth validation for /auth/test-mode", async () => {
     const mockReq = {
-      nextUrl: { pathname: "/admin/test-mode" },
-      url: "http://localhost:3000/admin/test-mode",
+      nextUrl: { pathname: "/auth/test-mode" },
+      url: "http://localhost:3000/auth/test-mode",
       headers: new Map(),
     } as unknown as Parameters<typeof proxy>[0];
 
@@ -61,7 +61,9 @@ describe("Proxy Middleware", () => {
 
     expect(mockGetValidate).toHaveBeenCalled();
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/admin/testMode");
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/admin/testMode",
+    );
   });
 
   it("allows navigation when status is Valid", async () => {
@@ -73,11 +75,13 @@ describe("Proxy Middleware", () => {
       nextUrl: { pathname: "/admin/dashboard" },
       url: "http://localhost:3000/admin/dashboard",
       headers: new Map([["cookie", "admin-authentication=secret"]]),
+      format: "json",
     } as unknown as Parameters<typeof proxy>[0];
 
     const res = await proxy(mockReq);
 
     expect(mockGetValidate).toHaveBeenCalledWith({
+      format: "json",
       headers: {
         cookie: "admin-authentication=secret",
       },

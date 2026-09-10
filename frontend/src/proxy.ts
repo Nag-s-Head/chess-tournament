@@ -3,17 +3,16 @@ import type { NextRequest } from "next/server";
 import { apiClient } from "./lib/api/api";
 
 export async function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname === "/admin/test-mode") {
-    return NextResponse.next();
-  }
-
   try {
-    const cookieHeader = request.headers.get("cookie") || "";
+    const cookie = request.cookies.get("auth_token");
+    
+    // Construct the standard Cookie header format
+    const cookieHeader = cookie ? `${cookie.name}=${cookie.value}` : "";
+
     const apiResponse = await apiClient.auth.getValidate({
       headers: {
-        cookie: cookieHeader,
+        Cookie: cookieHeader,
       },
-      format: "json",
     });
 
     const valid = apiResponse.data?.valid;
@@ -23,17 +22,21 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
+    // Log the parsed data instead of .text() to avoid stream lock errors
     console.error(
-      "Access to admin portal by unathenticated user was attempted",
+      "Access to admin portal by unauthenticated user was attempted.",
+      "Response:",
+      apiResponse.data,
     );
+
     if (redirectUrl) {
       return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
 
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   } catch (error) {
     console.error("OAuth2 backend communication failed:", error);
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 }
 
