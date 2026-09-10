@@ -1,5 +1,6 @@
 "use server";
 import { apiClient } from "@/lib/api/api";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function doLogin(token: string) {
@@ -9,6 +10,8 @@ export async function doLogin(token: string) {
   if (!data.valid || !data.token) {
     redirect(data.url ?? "/auth/error?reason=backend");
   }
+
+  const cookieStore = await cookies();
 
   cookieStore.set({
     name: "auth_token",
