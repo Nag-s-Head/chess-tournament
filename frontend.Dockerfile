@@ -1,4 +1,4 @@
-FROM node:25-alpine AS base
+FROM node:26-alpine AS base
 RUN npm i -g pnpm@10.28.0
 
 FROM golang:1.27.1-alpine AS golang
