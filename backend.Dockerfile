@@ -1,4 +1,4 @@
-FROM golang:1.26.5-trixie AS initial
+FROM golang:1.27.1-trixie AS initial
 ENV GOPATH="/go"
 ENV GOCACHE=/root/.cache/go-build
 
