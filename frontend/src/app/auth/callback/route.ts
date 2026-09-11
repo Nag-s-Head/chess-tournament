@@ -1,5 +1,8 @@
 import { apiClient } from "@/lib/api/api";
+import { Logger } from "@/lib/logger/logger";
 import { NextResponse, NextRequest } from "next/server";
+
+const logger = new Logger();
 
 export async function GET(request: NextRequest) {
   const externalUrl = process.env.FRONTEND_EXTERNAL_BASE_URL;
@@ -7,7 +10,9 @@ export async function GET(request: NextRequest) {
   const code = url.searchParams.get("code");
 
   if (!code) {
-    return NextResponse.redirect(new URL("/auth/error?reason=no_code", externalUrl));
+    return NextResponse.redirect(
+      new URL("/auth/error?reason=no_code", externalUrl),
+    );
   }
 
   try {
@@ -41,8 +46,10 @@ export async function GET(request: NextRequest) {
     }
 
     return response;
-  } catch (err) {
-    console.error("Failed to execute postCallback via apiClient:", err);
-    return NextResponse.redirect(new URL("/auth/error?reason=db_error", externalUrl));
+  } catch (error: unknown) {
+    logger.error("Failed to execute postCallback via apiClient:", { error });
+    return NextResponse.redirect(
+      new URL("/auth/error?reason=db_error", externalUrl),
+    );
   }
 }

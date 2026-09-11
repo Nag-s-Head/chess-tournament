@@ -2,8 +2,11 @@ import Link from "next/link";
 import { Heading, Text } from "@/lib/components/Typography";
 import { apiClient } from "@/lib/api/api";
 import { redirect } from "next/navigation";
+import { Logger } from "@/lib/logger/logger";
 
 export const dynamic = "force-dynamic";
+
+const logger = new Logger();
 
 export default async function LoginPage() {
   let isValid = false;
