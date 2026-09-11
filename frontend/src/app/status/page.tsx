@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api/api";
+import { Footer } from "@/lib/components/Footer";
 import { Heading, Text } from "@/lib/components/Typography";
 
 export const dynamic = "force-dynamic";
@@ -27,12 +28,15 @@ export default async function Page() {
     });
 
   return (
-    <div className="flex flex-col gap-1 text-center p-5">
-      <Heading>System Status</Heading>
-      <Text className="text-green-500">Frontend Status: OK</Text>
-      <Text className={backendStatus ? "text-green-500" : "text-red-500"}>
-        Backend Status: {backendStatus ? "OK" : "FAILED"}
-      </Text>
+    <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
+        <Heading>System Status</Heading>
+        <Text className="text-green-500">Frontend Status: OK</Text>
+        <Text className={backendStatus ? "text-green-500" : "text-red-500"}>
+          Backend Status: {backendStatus ? "OK" : "FAILED"}
+        </Text>
+      </main>
+      <Footer />
     </div>
   );
 }
