@@ -101,7 +101,9 @@ describe("LoginPage", () => {
   });
 
   it("continues to render page when getValidate check throws an error", async () => {
-    mockGetValidate.mockRejectedValueOnce(new Error("Validation endpoint down"));
+    mockGetValidate.mockRejectedValueOnce(
+      new Error("Validation endpoint down"),
+    );
     mockGetLogin.mockResolvedValueOnce({
       url: "https://github.com/login/oauth/authorize?client_id=fallback",
     });

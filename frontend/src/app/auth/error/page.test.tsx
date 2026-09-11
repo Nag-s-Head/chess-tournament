@@ -6,9 +6,7 @@ describe("AuthErrorPage", () => {
     render(<AuthErrorPage searchParams={{ reason: "not_member" }} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /sign in/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /sign in/i })).toBeInTheDocument();
   });
 
   it("renders successfully when reason key exists in map", () => {
