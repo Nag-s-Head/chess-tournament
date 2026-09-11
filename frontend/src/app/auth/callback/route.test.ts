@@ -1,5 +1,9 @@
+/**
+ * @jest-environment node
+ */
 import { GET } from "./route";
 import { apiClient } from "@/lib/api/api";
+import { NextRequest } from "next/server";
 
 // Mock the API client
 jest.mock("@/lib/api/api", () => ({
@@ -22,7 +26,7 @@ describe("GET /auth/callback", () => {
   });
 
   it("redirects to no_code error when code query parameter is missing", async () => {
-    const request = new Request("http://localhost:3000/auth/callback");
+    const request = new NextRequest("http://localhost:3000/auth/callback");
     const response = await GET(request);
 
     expect(response.status).toBe(307);
@@ -34,13 +38,13 @@ describe("GET /auth/callback", () => {
 
   it("redirects to the provided error URL when the backend says the login is invalid", async () => {
     (apiClient.auth.postCallback as jest.Mock).mockResolvedValueOnce({
-      body: {
+      data: {
         valid: false,
         url: "/auth/error?reason=not_member",
       },
     });
 
-    const request = new Request(
+    const request = new NextRequest(
       "http://localhost:3000/auth/callback?code=unauthorized_code",
     );
     const response = await GET(request);
@@ -56,12 +60,12 @@ describe("GET /auth/callback", () => {
 
   it("redirects to token_exchange error when valid is false but no URL is returned", async () => {
     (apiClient.auth.postCallback as jest.Mock).mockResolvedValueOnce({
-      body: {
+      data: {
         valid: false,
       },
     });
 
-    const request = new Request(
+    const request = new NextRequest(
       "http://localhost:3000/auth/callback?code=invalid_code",
     );
     const response = await GET(request);
@@ -74,14 +78,14 @@ describe("GET /auth/callback", () => {
 
   it("redirects to admin (default) and sets the auth_token cookie on successful login", async () => {
     (apiClient.auth.postCallback as jest.Mock).mockResolvedValueOnce({
-      body: {
+      data: {
         valid: true,
         token: "mock-jwt-token",
         // url omitted to test the fallback to "/admin"
       },
     });
 
-    const request = new Request(
+    const request = new NextRequest(
       "http://localhost:3000/auth/callback?code=valid_code",
     );
     const response = await GET(request);
@@ -95,19 +99,19 @@ describe("GET /auth/callback", () => {
     expect(setCookie).toContain("Path=/");
     expect(setCookie).toContain("HttpOnly");
     expect(setCookie).toContain("Secure");
-    expect(setCookie).toMatch(/SameSite=Lax/i);
+    expect(setCookie).toMatch(/SameSite=Strict/i);
   });
 
   it("redirects to the backend-provided URL and sets the cookie on successful login", async () => {
     (apiClient.auth.postCallback as jest.Mock).mockResolvedValueOnce({
-      body: {
+      data: {
         valid: true,
         token: "mock-jwt-token-2",
         url: "/custom-dashboard",
       },
     });
 
-    const request = new Request(
+    const request = new NextRequest(
       "http://localhost:3000/auth/callback?code=valid_code",
     );
     const response = await GET(request);
@@ -121,7 +125,7 @@ describe("GET /auth/callback", () => {
       new Error("Network failure"),
     );
 
-    const request = new Request(
+    const request = new NextRequest(
       "http://localhost:3000/auth/callback?code=error_code",
     );
     const response = await GET(request);

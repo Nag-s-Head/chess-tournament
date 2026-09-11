@@ -1,5 +1,10 @@
+/**
+ * @jest-environment @edge-runtime/jest-environment
+ */
+
 import { proxy, config } from "./proxy";
 import { apiClient } from "./lib/api/api";
+import { NextRequest } from "next/server";
 
 jest.mock("./lib/api/api", () => ({
   apiClient: {
@@ -9,83 +14,109 @@ jest.mock("./lib/api/api", () => ({
   },
 }));
 
-jest.mock("next/server", () => {
-  return {
-    NextResponse: {
-      next: jest.fn(() => ({ status: 200, type: "next" })),
-      redirect: jest.fn((url: URL | string) => ({
-        status: 307,
-        type: "redirect",
-        headers: new Map([["location", url.toString()]]),
-      })),
-    },
-  };
-});
-
 describe("Proxy Middleware", () => {
   const mockGetValidate = apiClient.auth.getValidate as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
   });
 
   it("exports correct matcher config", () => {
     expect(config.matcher).toEqual(["/admin", "/admin/:path*"]);
   });
 
-  it("bypasses auth validation for /auth/test-mode", async () => {
-    const mockReq = {
-      nextUrl: { pathname: "/auth/test-mode" },
-      url: "http://localhost:3000/auth/test-mode",
-      headers: new Map(),
-    } as unknown as Parameters<typeof proxy>[0];
-
-    const res = await proxy(mockReq);
-
-    expect(mockGetValidate).not.toHaveBeenCalled();
-    expect(res.status).toBe(200);
-  });
-
-  it("redirects to login url when status is Login", async () => {
+  it("allows navigation when auth validation succeeds (valid: true)", async () => {
     mockGetValidate.mockResolvedValueOnce({
-      data: { valid: false, status: "Login", url: "/admin/testMode" },
+      data: { valid: true },
     });
 
-    const mockReq = {
-      nextUrl: { pathname: "/admin/dashboard" },
-      url: "http://localhost:3000/admin/dashboard",
-      headers: new Map(),
-    } as unknown as Parameters<typeof proxy>[0];
-
-    const res = await proxy(mockReq);
-
-    expect(mockGetValidate).toHaveBeenCalled();
-    expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe(
-      "http://localhost:3000/admin/testMode",
-    );
-  });
-
-  it("allows navigation when status is Valid", async () => {
-    mockGetValidate.mockResolvedValueOnce({
-      data: { valid: true, status: "Valid" },
+    const req = new NextRequest("http://localhost:3000/admin/dashboard", {
+      headers: {
+        cookie: "auth_token=valid-jwt-token",
+      },
     });
 
-    const mockReq = {
-      nextUrl: { pathname: "/admin/dashboard" },
-      url: "http://localhost:3000/admin/dashboard",
-      headers: new Map([["cookie", "admin-authentication=secret"]]),
-      format: "json",
-    } as unknown as Parameters<typeof proxy>[0];
-
-    const res = await proxy(mockReq);
+    const res = await proxy(req);
 
     expect(mockGetValidate).toHaveBeenCalledWith({
-      format: "json",
       headers: {
-        cookie: "admin-authentication=secret",
+        Cookie: "auth_token=valid-jwt-token",
       },
     });
     expect(res.status).toBe(200);
+    expect(res.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("passes empty Cookie header when auth_token cookie is absent", async () => {
+    mockGetValidate.mockResolvedValueOnce({
+      data: { valid: true },
+    });
+
+    const req = new NextRequest("http://localhost:3000/admin/dashboard");
+
+    await proxy(req);
+
+    expect(mockGetValidate).toHaveBeenCalledWith({
+      headers: {
+        Cookie: "",
+      },
+    });
+  });
+
+  it("redirects to the backend-provided URL when valid is false and url is present", async () => {
+    mockGetValidate.mockResolvedValueOnce({
+      data: {
+        valid: false,
+        url: "/auth/error?reason=unauthorized",
+      },
+    });
+
+    const req = new NextRequest("http://localhost:3000/admin/dashboard");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/auth/error?reason=unauthorized",
+    );
+    expect(console.error).toHaveBeenCalledWith(
+      "Access to admin portal by unauthenticated user was attempted.",
+      "Response:",
+      expect.anything(),
+    );
+  });
+
+  it("redirects to /auth/login fallback when valid is false and no url is provided", async () => {
+    mockGetValidate.mockResolvedValueOnce({
+      data: { valid: false },
+    });
+
+    const req = new NextRequest("http://localhost:3000/admin/dashboard");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/auth/login",
+    );
+  });
+
+  it("redirects to /auth/login when apiClient throws an exception", async () => {
+    mockGetValidate.mockRejectedValueOnce(new Error("Network connection lost"));
+
+    const req = new NextRequest("http://localhost:3000/admin/dashboard");
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/auth/login",
+    );
+    expect(console.error).toHaveBeenCalledWith(
+      "OAuth2 backend communication failed:",
+      expect.any(Error),
+    );
   });
 });
