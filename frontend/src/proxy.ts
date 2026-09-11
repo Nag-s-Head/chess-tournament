@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { apiClient } from "./lib/api/api";
 
+const externalUrl = process.env.FRONTEND_EXTERNAL_BASE_URL;
+
 export async function proxy(request: NextRequest) {
+  const baseUrl = externalUrl || request.url;
+
   try {
     const cookie = request.cookies.get("auth_token");
 
@@ -24,13 +28,13 @@ export async function proxy(request: NextRequest) {
     }
 
     if (redirectUrl) {
-      return NextResponse.redirect(new URL(redirectUrl, request.url));
+      return NextResponse.redirect(new URL(redirectUrl, baseUrl));
     }
 
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    return NextResponse.redirect(new URL("/auth/login", baseUrl));
   } catch (error) {
     console.error("OAuth2 backend communication failed:", error);
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    return NextResponse.redirect(new URL("/auth/login", baseUrl));
   }
 }
 

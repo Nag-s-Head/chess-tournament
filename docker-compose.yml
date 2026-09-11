@@ -22,6 +22,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      FRONTEND_EXTERNAL_BASE_URL: "http://localhost:3000"
       INTERNAL_API_URL: "http://backend:8081"
     depends_on:
       - backend
