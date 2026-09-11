@@ -19,7 +19,8 @@ export default async function LoginPage() {
 
   let authUrl = "/auth/error?reason=backend_error";
   try {
-    const data = await apiClient.auth.getLogin();
+    const resp = await apiClient.auth.getLogin();
+    const data = resp.data;
     if (data?.url) {
       authUrl = data.url;
     }
