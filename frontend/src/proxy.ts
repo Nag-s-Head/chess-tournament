@@ -23,10 +23,6 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
-    console.error(
-      "Access to admin portal by unauthenticated user was attempted.",
-    );
-
     if (redirectUrl) {
       return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
