@@ -1,0 +1,25 @@
+"use server";
+import { apiClient } from "@/lib/api/api";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export async function doLogin(token: string) {
+  const resp = await apiClient.auth.postCallback({ code: token });
+  const data = resp.data;
+
+  if (!data.valid || !data.token) {
+    redirect(data.url ?? "/auth/error?reason=backend");
+  }
+
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: "auth_token",
+    value: data.token,
+    path: "/",
+    expires: 60 * 60,
+    sameSite: "strict",
+  });
+
+  redirect("/admin");
+}

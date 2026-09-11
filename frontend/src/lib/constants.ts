@@ -1,5 +1,5 @@
 export const TOURNAMENT_NAME = "Charity Chess Reading";
-export const TOURNAMENT_DATE_TIME = "October 17th 2026, 7pm to 10pm."
+export const TOURNAMENT_DATE_TIME = "October 17th 2026, 7pm to 10pm.";
 
 export const TOURNAMENT_TAGLINE =
   "A charity knockout chess tournament. All donations will go to the Royal Berks Charity. hosted at the Nag's Head, Reading.";

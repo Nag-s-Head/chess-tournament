@@ -46,7 +46,7 @@ func main() {
 		"run",
 		"github.com/go-swagger/go-swagger/cmd/swagger",
 		"validate",
-		filename,
+		filepath.Join(wd, filename),
 	)
 
 	validateCmd.Stdout = os.Stdout

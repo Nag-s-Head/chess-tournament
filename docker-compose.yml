@@ -22,7 +22,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      INTERNAL_API_URL: "http://backend:8081/"
+      INTERNAL_API_URL: "http://backend:8081"
+      TEST_MODE: "true" 
     depends_on:
       - backend
     networks:
@@ -37,6 +38,8 @@ services:
           path: go.sum
         - action: rebuild
           path: Makefile
+        - action: rebuild
+          path: backend/api 
   backend:
     build:
       context: .
@@ -49,6 +52,8 @@ services:
       OAUTH_CLIENT_ID: "test"
       OAUTH_CLIENT_SECRET: "test"
       ADDR: "0.0.0.0:8081"
+      FRONTEND_EXTERNAL_BASE_URL: "http://localhost:3000"
+      TEST_MODE: "true" 
     expose:
       - "8081"
     networks:
@@ -68,5 +73,5 @@ services:
           path: Makefile
 networks:
   net:
-    name: "Chess Fest Reading Network"
+    name: "ChessFestReadingNetwork"
     driver: bridge
