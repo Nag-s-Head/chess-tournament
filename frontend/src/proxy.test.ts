@@ -6,7 +6,7 @@ import { proxy, config } from "./proxy";
 import { apiClient } from "./lib/api/api";
 import { NextRequest } from "next/server";
 
-jest.mock("./lib/api/api", () => ({
+jest.mock("@/lib/api/api", () => ({
   apiClient: {
     auth: {
       getValidate: jest.fn(),

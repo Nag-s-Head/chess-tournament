@@ -48,7 +48,7 @@ describe("LoginPage", () => {
       data: { valid: false },
     });
     mockGetLogin.mockResolvedValueOnce({
-      url: "https://github.com/login/oauth/authorize?client_id=mock",
+      data: { url: "https://github.com/login/oauth/authorize?client_id=mock" },
     });
 
     const jsx = await LoginPage();
@@ -105,7 +105,9 @@ describe("LoginPage", () => {
       new Error("Validation endpoint down"),
     );
     mockGetLogin.mockResolvedValueOnce({
-      url: "https://github.com/login/oauth/authorize?client_id=fallback",
+      data: {
+        url: "https://github.com/login/oauth/authorize?client_id=fallback",
+      },
     });
 
     const jsx = await LoginPage();

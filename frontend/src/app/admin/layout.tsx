@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Heading } from "@/lib/components/Typography";
 import { Footer } from "@/lib/components/Footer";
+import { logout } from "./layoutActions";
 
 function formatSegment(segment: string) {
   return segment
@@ -67,12 +68,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               )}
             </div>
 
-            <Link
-              href="/auth/logout"
+            <button
               className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium transition-colors whitespace-nowrap ml-auto"
+              onClick={async () => {
+                await logout();
+              }}
             >
               Sign Out
-            </Link>
+            </button>
           </div>
 
           {/* Breadcrumbs - Mobile */}
