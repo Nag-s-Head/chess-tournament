@@ -1,15 +1,19 @@
 FROM golang:1.26.5-trixie AS initial
+ENV GOPATH="/go"
+ENV GOCACHE=/root/.cache/go-build
 
 FROM initial AS with_go_mod
 COPY ./go.mod ./go.sum ./
-RUN go mod download
+RUN --mount=type=cache,target="/go/pkg/mod" \
+  go mod download
 
 FROM with_go_mod AS build
 WORKDIR /build
 COPY ./go.mod ./go.sum ./Makefile ./test.env ./
 COPY ./backend ./backend
-ENV GOCACHE=/root/.cache/go-build
-RUN --mount=type=cache,target="/root/.cache/go-build" make backend-build -j
+RUN --mount=type=cache,target="/root/.cache/go-build" \
+  --mount=type=cache,target="/go/pkg/mod" \
+  make backend-build -j
 
 FROM initial AS release
 RUN useradd -m app

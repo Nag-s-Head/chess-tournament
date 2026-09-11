@@ -8,31 +8,36 @@ RUN apk add --no-cache make
 
 # Go is copied from the go alpine container to keep the version pegged
 COPY --from=golang /usr/local/go /usr/local/go
-ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPATH="/go"
+ENV PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+ENV GOCACHE=/root/.cache/go-build
 
 # Install dependencies only when needed
 FROM with-tools AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY ./frontend/package.json ./frontend/pnpm-lock.yaml ./
-RUN pnpm i --frozen-lockfile
+COPY ./go.mod ./go.sum ./
+RUN --mount=type=cache,target="/go/pkg/mod" \
+  --mount=type=cache,target="/app/frontend/node_modules" \
+  pnpm --prefix frontend i --frozen-lockfile && \
+  go mod download
 
 # Rebuild the source code only when needed
 FROM with-tools AS builder
 WORKDIR /app
 COPY ./ ./
-COPY --from=deps /app/node_modules ./frontend/node_modules
-COPY ./go.mod ./go.sum ./Makefile ./test.env ./
+COPY ./Makefile ./test.env ./
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
-
-ENV GOCACHE=/root/.cache/go-build
-RUN --mount=type=cache,target="/root/.cache/go-build" \
-  --mount=type=cache,target="/app/frontend/.next/cache" \
-  make frontend-build -j 
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+    --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/app/frontend/.next/cache \
+    make frontend-build -j
 
 # Production image, copy all the files and run next
 FROM base AS runner
