@@ -5,10 +5,10 @@ import { redirect } from "next/navigation";
 
 export async function doLogin(token: string) {
   const resp = await apiClient.auth.postCallback({ code: token });
-  const data = resp.data;
+  const data = resp?.data;
 
-  if (!data.valid || !data.token) {
-    redirect(data.url ?? "/auth/error?reason=backend");
+  if (!data?.valid || !data?.token) {
+    redirect(data?.url ?? "/auth/error?reason=backend");
   }
 
   const cookieStore = await cookies();
@@ -17,8 +17,10 @@ export async function doLogin(token: string) {
     name: "auth_token",
     value: data.token,
     path: "/",
-    expires: 60 * 60,
+    maxAge: 60 * 60, // 1 hour in seconds (use maxAge, not expires)
     sameSite: "strict",
+    httpOnly: true,
+    secure: false, // Localhost testing override
   });
 
   redirect("/admin");

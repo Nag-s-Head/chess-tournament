@@ -23,13 +23,6 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Log the parsed data instead of .text() to avoid stream lock errors
-    console.error(
-      "Access to admin portal by unauthenticated user was attempted.",
-      "Response:",
-      resp,
-    );
-
     if (redirectUrl) {
       return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
