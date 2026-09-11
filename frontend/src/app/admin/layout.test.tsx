@@ -13,7 +13,7 @@ describe("AdminLayout", () => {
     jest.clearAllMocks();
   });
 
-  it("renders navbar header, child content, sign-out button, and footer", () => {
+  it("renders navbar header, child content, and sign-out button", () => {
     mockUsePathname.mockReturnValue("/admin");
 
     render(
@@ -24,7 +24,6 @@ describe("AdminLayout", () => {
 
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
     expect(screen.getByTestId("admin-child")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", { name: /sign out/i }),

@@ -2,11 +2,12 @@ import { apiClient } from "@/lib/api/api";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const externalUrl = process.env.FRONTEND_EXTERNAL_BASE_URL;
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
 
   if (!code) {
-    return NextResponse.redirect("/auth/error?reason=no_code");
+    return NextResponse.redirect(new URL("/auth/error?reason=no_code", externalUrl));
   }
 
   try {
@@ -17,14 +18,14 @@ export async function GET(request: NextRequest) {
     const data = resp.data;
 
     if (!data?.valid) {
-      const errorUrl = data?.url || "/auth/error?reason=token_exchange";
-      return NextResponse.redirect(errorUrl, {
+      const errorPath = data?.url || "/auth/error?reason=token_exchange";
+      return NextResponse.redirect(new URL(errorPath, externalUrl), {
         status: 307,
       });
     }
 
-    const redirectUrl = data?.url || "/admin";
-    const response = NextResponse.redirect(redirectUrl, {
+    const redirectPath = data?.url || "/admin";
+    const response = NextResponse.redirect(new URL(redirectPath, externalUrl), {
       status: 307,
     });
 
@@ -42,6 +43,6 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error("Failed to execute postCallback via apiClient:", err);
-    return NextResponse.redirect("/auth/error?reason=db_error");
+    return NextResponse.redirect(new URL("/auth/error?reason=db_error", externalUrl));
   }
 }
