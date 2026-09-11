@@ -84,7 +84,7 @@ export default function AuthErrorPage({
   );
 }
 
-async function ContentFromParams({
+function ContentFromParams({
   searchParams,
 }: {
   searchParams?: SearchParams;
