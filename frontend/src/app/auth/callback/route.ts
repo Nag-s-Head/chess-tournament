@@ -6,9 +6,7 @@ export async function GET(request: NextRequest) {
   const code = url.searchParams.get("code");
 
   if (!code) {
-    return NextResponse.redirect(
-      new URL("/auth/error?reason=no_code", request.url),
-    );
+    return NextResponse.redirect("/auth/error?reason=no_code");
   }
 
   try {
@@ -20,13 +18,13 @@ export async function GET(request: NextRequest) {
 
     if (!data?.valid) {
       const errorUrl = data?.url || "/auth/error?reason=token_exchange";
-      return NextResponse.redirect(new URL(errorUrl, request.url), {
+      return NextResponse.redirect(errorUrl, {
         status: 307,
       });
     }
 
     const redirectUrl = data?.url || "/admin";
-    const response = NextResponse.redirect(new URL(redirectUrl, request.url), {
+    const response = NextResponse.redirect(redirectUrl, {
       status: 307,
     });
 
@@ -44,8 +42,6 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error("Failed to execute postCallback via apiClient:", err);
-    return NextResponse.redirect(
-      new URL("/auth/error?reason=db_error", request.url),
-    );
+    return NextResponse.redirect("/auth/error?reason=db_error");
   }
 }
