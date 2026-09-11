@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const redirectPath = data?.url || "/admin";
+    const redirectPath = "/admin";
     const response = NextResponse.redirect(new URL(redirectPath, externalUrl), {
       status: 307,
     });
