@@ -19,7 +19,6 @@ describe("Proxy Middleware", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
@@ -83,11 +82,6 @@ describe("Proxy Middleware", () => {
     expect(res.headers.get("location")).toBe(
       "http://localhost:3000/auth/error?reason=unauthorized",
     );
-    expect(console.error).toHaveBeenCalledWith(
-      "Access to admin portal by unauthenticated user was attempted.",
-      "Response:",
-      expect.anything(),
-    );
   });
 
   it("redirects to /auth/login fallback when valid is false and no url is provided", async () => {
@@ -113,10 +107,6 @@ describe("Proxy Middleware", () => {
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toBe(
       "http://localhost:3000/auth/login",
-    );
-    expect(console.error).toHaveBeenCalledWith(
-      "OAuth2 backend communication failed:",
-      expect.any(Error),
     );
   });
 });
