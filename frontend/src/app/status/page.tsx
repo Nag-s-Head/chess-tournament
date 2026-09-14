@@ -1,9 +1,12 @@
 import { apiClient } from "@/lib/api/api";
 import { Footer } from "@/lib/components/Footer";
 import { Heading, Text } from "@/lib/components/Typography";
+import { Logger } from "@/lib/logger/logger";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+const logger = new Logger();
 
 export default async function Page() {
   const backendStatus = await apiClient.health
@@ -12,19 +15,16 @@ export default async function Page() {
       const good = !!x.data?.status;
       if (!good) {
         x.text().then((text) =>
-          console.error(
-            "Health check failed",
-            "good:",
+          logger.error("Health check failed", {
             good,
-            "response:",
             text,
-          ),
+          }),
         );
       }
       return good;
     })
     .catch((error: unknown) => {
-      console.log("Cannot get backend status", error);
+      logger.error("Cannot get backend status", { error });
       return false;
     });
 

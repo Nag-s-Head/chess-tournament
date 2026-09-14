@@ -6,6 +6,7 @@ import (
 
 	"github.com/Nag-s-Head/chess-tournament/backend/db"
 	"github.com/Nag-s-Head/chess-tournament/backend/db/model"
+	httputils "github.com/Nag-s-Head/chess-tournament/backend/lib/http_utils"
 )
 
 // swagger:route GET /auth/logout auth getLogout
@@ -21,7 +22,7 @@ func HandleLogout(db db.Db) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, CreateAuthCookie(""))
 
-		cookie, err := r.Cookie(AuthCookie)
+		cookie, err := r.Cookie(httputils.AuthCookie)
 		if err == nil {
 			user, err := model.AdminGetFromSessionKey(db, cookie.Value)
 			if err == nil {

@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { apiClient } from "./lib/api/api";
+import { Logger } from "./lib/logger/logger";
 
 const externalUrl = process.env.FRONTEND_EXTERNAL_BASE_URL;
+const logger = new Logger();
 
 export async function proxy(request: NextRequest) {
   const baseUrl = externalUrl || request.url;
@@ -33,7 +35,7 @@ export async function proxy(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/auth/login", baseUrl));
   } catch (error) {
-    console.error("OAuth2 backend communication failed:", error);
+    logger.error("OAuth2 backend communication failed", { error });
     return NextResponse.redirect(new URL("/auth/login", baseUrl));
   }
 }
@@ -41,4 +43,3 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: ["/admin", "/admin/:path*"],
 };
-

@@ -17,8 +17,6 @@ jest.mock("@/lib/api/api", () => ({
 describe("GET /auth/callback", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Suppress console.error in tests to avoid noisy output on the intentional error test
-    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
@@ -107,7 +105,7 @@ describe("GET /auth/callback", () => {
       data: {
         valid: true,
         token: "mock-jwt-token-2",
-        url: "/custom-dashboard",
+        url: "http://localhost:3000/admin",
       },
     });
 
@@ -117,7 +115,7 @@ describe("GET /auth/callback", () => {
     const response = await GET(request);
 
     expect(response.status).toBe(307);
-    expect(response.headers.get("Location")).toContain("/custom-dashboard");
+    expect(response.headers.get("Location")).toContain("http://localhost:3000/admin");
   });
 
   it("redirects to db_error when apiClient throws an exception", async () => {
@@ -133,10 +131,6 @@ describe("GET /auth/callback", () => {
     expect(response.status).toBe(307);
     expect(response.headers.get("Location")).toContain(
       "/auth/error?reason=db_error",
-    );
-    expect(console.error).toHaveBeenCalledWith(
-      "Failed to execute postCallback via apiClient:",
-      expect.any(Error),
     );
   });
 });

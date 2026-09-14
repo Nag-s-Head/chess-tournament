@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Heading, Text } from "@/lib/components/Typography";
+import { StatusCard } from "@/lib/components/StatusCard";
 
 const reasons: Record<string, { title: string; description: string }> = {
   not_member: {
@@ -62,19 +63,17 @@ export default function AuthErrorPage({
     <>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.06)_0%,transparent_70%)]" />
 
-      <div className="relative z-10 w-full max-w-md p-8 rounded-3xl border border-rose-500/20 bg-rose-500/5 backdrop-blur-xl shadow-2xl flex flex-col items-center text-center">
-        <div className="w-16 h-16 mb-6 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-3xl">
-          ⛔
-        </div>
+      <div className="relative z-10">
+        <StatusCard variant="error">
+          <ContentFromParams searchParams={searchParams} />
 
-        <ContentFromParams searchParams={searchParams} />
-
-        <Link
-          href="/auth/login"
-          className="mt-8 w-full py-3.5 px-6 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold transition-colors flex items-center justify-center gap-2"
-        >
-          ← Back to Sign In
-        </Link>
+          <Link
+            href="/auth/login"
+            className="mt-8 w-full py-3.5 px-6 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold transition-colors flex items-center justify-center gap-2"
+          >
+            ← Back to Sign In
+          </Link>
+        </StatusCard>
       </div>
     </>
   );

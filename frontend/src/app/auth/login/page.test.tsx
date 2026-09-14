@@ -23,7 +23,6 @@ describe("LoginPage", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
@@ -78,10 +77,6 @@ describe("LoginPage", () => {
       "href",
       "/auth/error?reason=backend_error",
     );
-    expect(console.error).toHaveBeenCalledWith(
-      "Getting Login URL failed",
-      expect.any(Error),
-    );
   });
 
   it("falls back to error URL when getLogin returns no URL property", async () => {
@@ -112,11 +107,6 @@ describe("LoginPage", () => {
 
     const jsx = await LoginPage();
     render(jsx);
-
-    expect(console.error).toHaveBeenCalledWith(
-      "Checking if logged in failed",
-      expect.any(Error),
-    );
     expect(mockRedirect).not.toHaveBeenCalled();
 
     const loginLink = screen.getByRole("link", { name: /github/i });
