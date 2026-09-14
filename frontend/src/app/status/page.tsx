@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api/api";
 import { Footer } from "@/lib/components/Footer";
-import { Heading, Text } from "@/lib/components/Typography";
+import { StatusCard } from "@/lib/components/StatusCard";
+import { Text } from "@/lib/components/Typography";
 import { Logger } from "@/lib/logger/logger";
 import Link from "next/link";
 
@@ -32,12 +33,7 @@ export default async function Page() {
     <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.06)_0%,transparent_70%)]" />
-
-        <div className="relative z-10 w-full max-w-md p-8 rounded-3xl border border-rose-500/20 bg-rose-500/5 backdrop-blur-xl shadow-2xl flex flex-col items-center text-center">
-          <div className="w-16 h-16 mb-6 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-3xl">
-            📡
-          </div>
-          <Heading>System Status</Heading>
+        <StatusCard emoji="📡" title="System Status">
           <Text className="text-green-500">Frontend Status: OK</Text>
           <Text className={backendStatus ? "text-green-500" : "text-red-500"}>
             Backend Status: {backendStatus ? "OK" : "FAILED"}
@@ -49,7 +45,7 @@ export default async function Page() {
           >
             ← Back to home page
           </Link>
-        </div>
+        </StatusCard>
       </main>
       <Footer />
     </div>
