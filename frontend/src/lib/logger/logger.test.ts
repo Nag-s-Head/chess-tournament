@@ -50,7 +50,7 @@ describe("Logger", () => {
       expect(consoleLogSpy).toHaveBeenCalledTimes(4);
 
       const levels = consoleLogSpy.mock.calls.map(
-        (call) => JSON.parse(call[0]).level
+        (call) => JSON.parse(call[0]).level,
       );
       expect(levels).toEqual(["debug", "info", "warn", "error"]);
     });
@@ -93,7 +93,10 @@ describe("Logger", () => {
 
   describe("Child Logger Context (.with)", () => {
     it("creates child loggers without modifying the parent context", () => {
-      const parentLogger = new Logger({ app: "payment-service" }, { minLevel: "info" });
+      const parentLogger = new Logger(
+        { app: "payment-service" },
+        { minLevel: "info" },
+      );
       const childLogger = parentLogger.with({ requestId: "req-abc-123" });
 
       parentLogger.info("Parent event");
@@ -135,7 +138,7 @@ describe("Logger", () => {
     it("preserves minLevel and captureCaller configurations in child loggers", () => {
       const parentLogger = new Logger(
         { env: "production" },
-        { minLevel: "error", captureCaller: false }
+        { minLevel: "error", captureCaller: false },
       );
       const childLogger = parentLogger.with({ component: "db" });
 

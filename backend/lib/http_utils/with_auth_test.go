@@ -1,13 +1,13 @@
-package auth_test
+package httputils_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Nag-s-Head/chess-tournament/backend/api/auth"
 	"github.com/Nag-s-Head/chess-tournament/backend/db/model"
 	testutils "github.com/Nag-s-Head/chess-tournament/backend/db/test_utils"
+	httputils "github.com/Nag-s-Head/chess-tournament/backend/lib/http_utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,7 +26,7 @@ func TestWithAuthentication(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/admin/protected", nil)
 		rr := httptest.NewRecorder()
 
-		handler := auth.WithAuthentication(db, dummyHandler)
+		handler := httputils.WithAuthentication(db, dummyHandler)
 		handler(rr, req)
 
 		require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
@@ -36,17 +36,17 @@ func TestWithAuthentication(t *testing.T) {
 	t.Run("Invalid session key redirects and clears cookie", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/admin/protected", nil)
 		req.AddCookie(&http.Cookie{
-			Name:  auth.AuthCookie,
+			Name:  httputils.AuthCookie,
 			Value: "bad-session-key",
 		})
 		rr := httptest.NewRecorder()
 
-		handler := auth.WithAuthentication(db, dummyHandler)
+		handler := httputils.WithAuthentication(db, dummyHandler)
 		handler(rr, req)
 
 		require.Equal(t, http.StatusTemporaryRedirect, rr.Code)
 		setCookie := rr.Header().Get("Set-Cookie")
-		require.Contains(t, setCookie, auth.AuthCookie)
+		require.Contains(t, setCookie, httputils.AuthCookie)
 	})
 
 	t.Run("Valid session key succeeds", func(t *testing.T) {
@@ -55,12 +55,12 @@ func TestWithAuthentication(t *testing.T) {
 
 		req := httptest.NewRequest(http.MethodGet, "/admin/protected", nil)
 		req.AddCookie(&http.Cookie{
-			Name:  auth.AuthCookie,
+			Name:  httputils.AuthCookie,
 			Value: user.SessionKey,
 		})
 		rr := httptest.NewRecorder()
 
-		handler := auth.WithAuthentication(db, dummyHandler)
+		handler := httputils.WithAuthentication(db, dummyHandler)
 		handler(rr, req)
 
 		require.Equal(t, http.StatusOK, rr.Code)

@@ -1,4 +1,4 @@
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface LoggerOptions {
   minLevel?: LogLevel;
@@ -18,9 +18,9 @@ export class Logger {
 
   constructor(
     private readonly context: Record<string, unknown> = {},
-    options: LoggerOptions = {}
+    options: LoggerOptions = {},
   ) {
-    this.minLevel = options.minLevel ?? 'info';
+    this.minLevel = options.minLevel ?? "info";
     this.captureCaller = options.captureCaller ?? true;
   }
 
@@ -30,7 +30,7 @@ export class Logger {
   public with(tags: Record<string, unknown>): Logger {
     return new Logger(
       { ...this.context, ...tags },
-      { minLevel: this.minLevel, captureCaller: this.captureCaller }
+      { minLevel: this.minLevel, captureCaller: this.captureCaller },
     );
   }
 
@@ -60,7 +60,11 @@ export class Logger {
     return lineNumber ? `${fileName}:${lineNumber}` : fileName;
   }
 
-  private log(level: LogLevel, message: string, extra: Record<string, unknown> = {}): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    extra: Record<string, unknown> = {},
+  ): void {
     if (Logger.LEVELS[level] < Logger.LEVELS[this.minLevel]) return;
 
     const caller = this.captureCaller ? this.getCallerLocation() : undefined;
@@ -78,18 +82,18 @@ export class Logger {
   }
 
   public debug(message: string, extra?: Record<string, unknown>): void {
-    this.log('debug', message, extra);
+    this.log("debug", message, extra);
   }
 
   public info(message: string, extra?: Record<string, unknown>): void {
-    this.log('info', message, extra);
+    this.log("info", message, extra);
   }
 
   public warn(message: string, extra?: Record<string, unknown>): void {
-    this.log('warn', message, extra);
+    this.log("warn", message, extra);
   }
 
   public error(message: string, extra?: Record<string, unknown>): void {
-    this.log('error', message, extra);
+    this.log("error", message, extra);
   }
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/Nag-s-Head/chess-tournament/backend/api/auth"
 	"github.com/Nag-s-Head/chess-tournament/backend/db/model"
 	testutils "github.com/Nag-s-Head/chess-tournament/backend/db/test_utils"
+	httputils "github.com/Nag-s-Head/chess-tournament/backend/lib/http_utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -33,7 +34,7 @@ func TestLogout(t *testing.T) {
 
 		req := httptest.NewRequest(http.MethodGet, "/admin/logout", nil)
 		req.AddCookie(&http.Cookie{
-			Name:  auth.AuthCookie,
+			Name:  httputils.AuthCookie,
 			Value: user.SessionKey,
 		})
 		rr := httptest.NewRecorder()
@@ -57,7 +58,7 @@ func TestLogout(t *testing.T) {
 	t.Run("Invalid session key in cookie", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/admin/logout", nil)
 		req.AddCookie(&http.Cookie{
-			Name:  auth.AuthCookie,
+			Name:  httputils.AuthCookie,
 			Value: "invalid-key",
 		})
 		rr := httptest.NewRecorder()

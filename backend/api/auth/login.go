@@ -46,7 +46,7 @@ type LoginResponse struct {
 }
 
 func AuthUrl() string {
-	if isTestMode() {
+	if httputils.IsTestMode() {
 		return "/auth/test-mode"
 	}
 	if oauthConfig != nil {

@@ -45,7 +45,7 @@ type CallbackResponse struct {
 func HandleCallback(database db.Db) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := r.URL.Query().Get("code")
-		if isTestMode() {
+		if httputils.IsTestMode() {
 			slog.Warn("Test mode is enabled, using mocked callback codes")
 			switch code {
 			case "valid":

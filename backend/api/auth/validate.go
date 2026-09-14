@@ -62,7 +62,7 @@ func HandleValidate(database db.Db) func(w http.ResponseWriter, r *http.Request)
 }
 
 func getSessionToken(r *http.Request) string {
-	if cookie, err := r.Cookie(AuthCookie); err == nil && cookie.Value != "" {
+	if cookie, err := r.Cookie(httputils.AuthCookie); err == nil && cookie.Value != "" {
 		return cookie.Value
 	}
 	return ""
