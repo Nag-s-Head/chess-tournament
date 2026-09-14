@@ -72,10 +72,10 @@ export function StatusCard({
 
   const body = (
     <div
-      className={`w-full max-w-md p-8 rounded-3xl border backdrop-blur-xl shadow-2xl flex flex-col items-center text-center ${config.cardStyles}`}
+      className={`w-full max-w-md p-8 rounded-3xl border-2 backdrop-blur-xl shadow-2xl flex flex-col items-center text-center ${config.cardStyles}`}
     >
       <div
-        className={`w-16 h-16 mb-6 rounded-2xl border flex items-center justify-center text-3xl shrink-0 ${config.iconStyles}`}
+        className={`w-16 h-16 mb-6 rounded-2xl border-2 flex items-center justify-center text-3xl shrink-0 ${config.iconStyles}`}
       >
         {activeEmoji}
       </div>
