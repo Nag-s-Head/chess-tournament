@@ -13,7 +13,7 @@ export default async function LoginPage() {
   try {
     isValid = !!(await apiClient.auth.getValidate()).data?.valid;
   } catch (error: unknown) {
-    console.error("Checking if logged in failed", error);
+    logger.error("Checking if logged in failed", { error });
   }
 
   if (isValid) {
@@ -28,7 +28,7 @@ export default async function LoginPage() {
       authUrl = data.url;
     }
   } catch (error: unknown) {
-    console.error("Getting Login URL failed", error);
+    logger.error("Getting Login URL failed", { error });
   }
 
   return (
@@ -45,7 +45,7 @@ export default async function LoginPage() {
         </Heading>
 
         <Text size="sm" variant="muted" className="mb-8 text-zinc-400">
-          Sign in with your authorized GitHub account to manage the knockout
+          Sign in with your authorised GitHub account to manage the knockout
           tournament.
         </Text>
 

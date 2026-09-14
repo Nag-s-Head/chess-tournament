@@ -105,7 +105,7 @@ describe("GET /auth/callback", () => {
       data: {
         valid: true,
         token: "mock-jwt-token-2",
-        url: "/custom-dashboard",
+        url: "http://localhost:3000/admin",
       },
     });
 
@@ -115,7 +115,7 @@ describe("GET /auth/callback", () => {
     const response = await GET(request);
 
     expect(response.status).toBe(307);
-    expect(response.headers.get("Location")).toContain("/custom-dashboard");
+    expect(response.headers.get("Location")).toContain("http://localhost:3000/admin");
   });
 
   it("redirects to db_error when apiClient throws an exception", async () => {
