@@ -1,7 +1,7 @@
 FROM node:26-alpine AS base
 RUN npm i -g pnpm@10.28.0
 
-FROM golang:1.27.2-alpine AS golang
+FROM golang:1.27.3-alpine AS golang
 
 FROM base AS with-tools
 RUN apk add --no-cache make
